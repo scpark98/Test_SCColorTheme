@@ -16,6 +16,12 @@
     <Filter Include="Common">
       <UniqueIdentifier>{93c5de68-1345-4e72-8e01-41c9d7819de8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Common\CVtListCtrlEx">
+      <UniqueIdentifier>{8e0dc452-e243-42b5-9a61-3dc09cee8176}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\CSCMenuBar">
+      <UniqueIdentifier>{e3c57cb3-b10e-47f6-a1b8-349a67ce848f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Test_SCColorTheme.h">
@@ -60,6 +66,42 @@
     <ClInclude Include="..\..\Common\CButton\SCSystemButtons\SCSystemButtons.h">
       <Filter>Common</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Common\CListCtrl\CVtListCtrlEx\HeaderCtrlEx.h">
+      <Filter>Common\CVtListCtrlEx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\CListCtrl\CVtListCtrlEx\list_data.h">
+      <Filter>Common\CVtListCtrlEx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\CListCtrl\CVtListCtrlEx\VtListCtrlEx.h">
+      <Filter>Common\CVtListCtrlEx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\CTreeCtrl\SCTreeCtrl\SCTreeCtrl.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\CButton\GdiButton\GdiButton.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\CEdit\SCEdit\SCEdit.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\ui\theme\theme.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\ui\theme\ThemeLib.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\CMenu\CSCMenuBar\SCMenuBar.h">
+      <Filter>Common\CSCMenuBar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\CMenu\CSCMenuBar\SCMenuButton.h">
+      <Filter>Common\CSCMenuBar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\CMenu\CSCMenuBar\SCMenu.h">
+      <Filter>Common\CSCMenuBar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\CComboBox\SCComboBox\SCComboBox.h">
+      <Filter>Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Test_SCColorTheme.cpp">
@@ -92,6 +134,39 @@
     <ClCompile Include="..\..\Common\CButton\SCSystemButtons\SCSystemButtons.cpp">
       <Filter>Common</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Common\CListCtrl\CVtListCtrlEx\list_data.cpp">
+      <Filter>Common\CVtListCtrlEx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\CListCtrl\CVtListCtrlEx\VtListCtrlEx.cpp">
+      <Filter>Common\CVtListCtrlEx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\CListCtrl\CVtListCtrlEx\HeaderCtrlEx.cpp">
+      <Filter>Common\CVtListCtrlEx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\CTreeCtrl\SCTreeCtrl\SCTreeCtrl.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\CButton\GdiButton\GdiButton.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\CEdit\SCEdit\SCEdit.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\ui\theme\theme.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\CMenu\CSCMenuBar\SCMenuButton.cpp">
+      <Filter>Common\CSCMenuBar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\CMenu\CSCMenuBar\SCMenu.cpp">
+      <Filter>Common\CSCMenuBar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\CMenu\CSCMenuBar\SCMenuBar.cpp">
+      <Filter>Common\CSCMenuBar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\CComboBox\SCComboBox\SCComboBox.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="TestSCColorTheme.rc">
@@ -107,5 +182,10 @@
     <Image Include="res\Test_SCColorTheme.ico">
       <Filter>리소스 파일</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\Common\CListCtrl\CVtListCtrlEx\readme.txt">
+      <Filter>Common\CVtListCtrlEx</Filter>
+    </Text>
   </ItemGroup>
 </Project>

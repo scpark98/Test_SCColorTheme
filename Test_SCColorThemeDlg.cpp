@@ -59,12 +59,17 @@ CTestSCColorThemeDlg::CTestSCColorThemeDlg(CWnd* pParent /*=nullptr*/)
 void CTestSCColorThemeDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CSCThemeDlg::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_TREE, m_tree);
+	DDX_Control(pDX, IDC_LIST, m_list);
+	DDX_Control(pDX, IDC_COMBO_THEME, m_combo_theme);
 }
 
 BEGIN_MESSAGE_MAP(CTestSCColorThemeDlg, CSCThemeDlg)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
+	ON_WM_WINDOWPOSCHANGED()
+	ON_CBN_SELCHANGE(IDC_COMBO_THEME, &CTestSCColorThemeDlg::OnCbnSelchangeComboTheme)
 END_MESSAGE_MAP()
 
 
@@ -108,6 +113,28 @@ BOOL CTestSCColorThemeDlg::OnInitDialog()
 	//set_titlebar_height(32);
 	set_titlebar_icon(IDR_MAINFRAME, 16, 16);
 
+	m_resize.Create(this);
+	m_resize.Add(IDOK, 100, 100, 0, 0);
+	m_resize.Add(IDCANCEL, 100, 100, 0, 0);
+	m_resize.Add(IDC_TREE, 0, 0, 0, 100);
+	m_resize.Add(IDC_LIST, 0, 0, 100, 100);
+
+	m_tree.set_as_shell_treectrl(&m_shell_imglist);
+	m_list.set_as_shell_listctrl(&m_shell_imglist);
+
+	std::deque<CString> dq_color_theme = CSCColorTheme::get_color_theme_list();
+	for (auto theme_name : dq_color_theme)
+		m_combo_theme.AddString(theme_name);
+
+	int color_theme = theApp.GetProfileInt(_T("setting"), _T("color theme"), CSCColorTheme::color_theme_default);
+	m_combo_theme.SetCurSel(color_theme);
+	set_color_theme(color_theme);
+
+	m_combo_theme.set_color_theme(color_theme);
+	m_tree.set_color_theme(m_theme.get_color_theme());
+	m_list.set_color_theme(m_theme.get_color_theme());
+
+	RestoreWindowPosition(&theApp, this);
 
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
@@ -161,3 +188,25 @@ HCURSOR CTestSCColorThemeDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
+
+void CTestSCColorThemeDlg::OnWindowPosChanged(WINDOWPOS* lpwndpos)
+{
+	CSCThemeDlg::OnWindowPosChanged(lpwndpos);
+
+	// TODO: 여기에 메시지 처리기 코드를 추가합니다.
+	SaveWindowPosition(&theApp, this);
+}
+
+void CTestSCColorThemeDlg::OnCbnSelchangeComboTheme()
+{
+	int index = m_combo_theme.GetCurSel();
+	if (index < 0 || index >= m_combo_theme.GetCount())
+		return;
+
+	theApp.WriteProfileInt(_T("setting"), _T("color theme"), index);
+	set_color_theme(index, true);
+
+	m_combo_theme.set_color_theme(index);
+	m_tree.set_color_theme(index);
+	m_list.set_color_theme(index);
+}

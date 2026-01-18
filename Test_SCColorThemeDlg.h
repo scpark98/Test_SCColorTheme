@@ -6,6 +6,7 @@
 
 #include "Common/CDialog/SCThemeDlg/SCThemeDlg.h"
 #include "Common/ResizeCtrl.h"
+#include "Common/CComboBox/SCComboBox/SCComboBox.h"
 #include "Common/CStatic/SCStatic/SCStatic.h"
 #include "Common/CEdit/SCEdit/SCEdit.h"
 #include "Common/system/ShellImageList/ShellImageList.h"
@@ -41,4 +42,10 @@ protected:
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
+public:
+	CSCTreeCtrl m_tree;
+	CVtListCtrlEx m_list;
+	afx_msg void OnWindowPosChanged(WINDOWPOS* lpwndpos);
+	CSCComboBox m_combo_theme;
+	afx_msg void OnCbnSelchangeComboTheme();
 };
