@@ -62,6 +62,9 @@ void CTestSCColorThemeDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_TREE, m_tree);
 	DDX_Control(pDX, IDC_LIST, m_list);
 	DDX_Control(pDX, IDC_COMBO_THEME, m_combo_theme);
+	DDX_Control(pDX, IDC_STATIC_COLOR_THEME, m_static_color_theme);
+	DDX_Control(pDX, IDC_EDIT, m_edit);
+	DDX_Control(pDX, IDC_STATIC_EDIT, m_static_edit);
 }
 
 BEGIN_MESSAGE_MAP(CTestSCColorThemeDlg, CSCThemeDlg)
@@ -122,7 +125,9 @@ BOOL CTestSCColorThemeDlg::OnInitDialog()
 	m_tree.set_as_shell_treectrl(&m_shell_imglist);
 	m_list.set_as_shell_listctrl(&m_shell_imglist);
 
-	std::deque<CString> dq_color_theme = CSCColorTheme::get_color_theme_list();
+	m_combo_theme.set_line_height(12);
+	std::deque<CString> dq_color_theme;
+	CSCColorTheme::get_color_theme_list(dq_color_theme);
 	for (auto theme_name : dq_color_theme)
 		m_combo_theme.AddString(theme_name);
 
@@ -131,8 +136,13 @@ BOOL CTestSCColorThemeDlg::OnInitDialog()
 	set_color_theme(color_theme);
 
 	m_combo_theme.set_color_theme(color_theme);
+	m_static_color_theme.set_color_theme(color_theme);
+	m_static_edit.set_color_theme(color_theme);
+	m_edit.set_color_theme(color_theme);
 	m_tree.set_color_theme(m_theme.get_color_theme());
 	m_list.set_color_theme(m_theme.get_color_theme());
+
+	m_edit.set_text(_T("This is a SCEdit control 컬러테마지원."));
 
 	RestoreWindowPosition(&theApp, this);
 
@@ -207,6 +217,9 @@ void CTestSCColorThemeDlg::OnCbnSelchangeComboTheme()
 	set_color_theme(index, true);
 
 	m_combo_theme.set_color_theme(index);
+	m_static_color_theme.set_color_theme(index);
+	m_static_edit.set_color_theme(index);
+	m_edit.set_color_theme(index);
 	m_tree.set_color_theme(index);
 	m_list.set_color_theme(index);
 }

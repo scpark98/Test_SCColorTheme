@@ -48,4 +48,7 @@ public:
 	afx_msg void OnWindowPosChanged(WINDOWPOS* lpwndpos);
 	CSCComboBox m_combo_theme;
 	afx_msg void OnCbnSelchangeComboTheme();
+	CSCStatic m_static_color_theme;
+	CSCEdit m_edit;
+	CSCStatic m_static_edit;
 };

@@ -207,6 +207,7 @@
     <ClInclude Include="..\..\Common\CMenu\CSCMenuBar\SCMenuBar.h" />
     <ClInclude Include="..\..\Common\CMenu\CSCMenuBar\SCMenuButton.h" />
     <ClInclude Include="..\..\Common\colors.h" />
+    <ClInclude Include="..\..\Common\CStatic\SCStatic\SCStatic.h" />
     <ClInclude Include="..\..\Common\CTreeCtrl\SCTreeCtrl\SCTreeCtrl.h" />
     <ClInclude Include="..\..\Common\Functions.h" />
     <ClInclude Include="..\..\Common\MemoryDC.h" />
@@ -290,6 +291,12 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\..\Common\colors.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\CStatic\SCStatic\SCStatic.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
