@@ -9,9 +9,12 @@
 #include "Common/CComboBox/SCComboBox/SCComboBox.h"
 #include "Common/CStatic/SCStatic/SCStatic.h"
 #include "Common/CEdit/SCEdit/SCEdit.h"
+#include "Common/CEdit/CSCStaticEdit/SCStaticEdit.h"
 #include "Common/system/ShellImageList/ShellImageList.h"
 #include "Common/CTreeCtrl/SCTreeCtrl/SCTreeCtrl.h"
 #include "Common/CListCtrl/CVtListCtrlEx/VtListCtrlEx.h"
+#include "Common/CButton/GdiButton/GdiButton.h"
+#include "Common/CListBox/SCListBox/SCListBox.h"
 
 // CTestSCColorThemeDlg 대화 상자
 class CTestSCColorThemeDlg : public CSCThemeDlg
@@ -20,8 +23,11 @@ class CTestSCColorThemeDlg : public CSCThemeDlg
 public:
 	CTestSCColorThemeDlg(CWnd* pParent = nullptr);	// 표준 생성자입니다.
 
-	CResizeCtrl		m_resize;
-	CShellImageList m_shell_imglist;
+	CResizeCtrl			m_resize;
+	CShellImageList		m_shell_imglist;
+
+	LRESULT				on_message_CSCSystemButtons(WPARAM wParam, LPARAM lParam);
+
 
 // 대화 상자 데이터입니다.
 #ifdef AFX_DESIGN_TIME
@@ -51,4 +57,10 @@ public:
 	CSCStatic m_static_color_theme;
 	CSCEdit m_edit;
 	CSCStatic m_static_edit;
+	CGdiButton m_btn_ok;
+	CGdiButton m_btn_cancel;
+	CSCStatic m_static_listbox;
+	CSCListBox m_listbox;
+	CSCStatic m_static_staticedit;
+	CSCStaticEdit m_static_scstaticedit;
 };

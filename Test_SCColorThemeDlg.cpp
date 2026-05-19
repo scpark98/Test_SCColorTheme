@@ -8,6 +8,8 @@
 #include "Test_SCColorThemeDlg.h"
 #include "afxdialogex.h"
 
+#include "Common/RandomText.h"
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -65,6 +67,13 @@ void CTestSCColorThemeDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_STATIC_COLOR_THEME, m_static_color_theme);
 	DDX_Control(pDX, IDC_EDIT, m_edit);
 	DDX_Control(pDX, IDC_STATIC_EDIT, m_static_edit);
+	//표준 PUSHBUTTON 인 IDOK / IDCANCEL 을 CGdiButton 으로 subclass — PreSubclassWindow 에서 BS_OWNERDRAW 자동 적용.
+	DDX_Control(pDX, IDOK, m_btn_ok);
+	DDX_Control(pDX, IDCANCEL, m_btn_cancel);
+	DDX_Control(pDX, IDC_STATIC_LISTBOX, m_static_listbox);
+	DDX_Control(pDX, IDC_LISTBOX, m_listbox);
+	DDX_Control(pDX, IDC_STATIC_SCSTATICEDIT, m_static_staticedit);
+	DDX_Control(pDX, IDC_STATIC_CSCSTATIC_EDIT, m_static_scstaticedit);
 }
 
 BEGIN_MESSAGE_MAP(CTestSCColorThemeDlg, CSCThemeDlg)
@@ -73,6 +82,7 @@ BEGIN_MESSAGE_MAP(CTestSCColorThemeDlg, CSCThemeDlg)
 	ON_WM_QUERYDRAGICON()
 	ON_WM_WINDOWPOSCHANGED()
 	ON_CBN_SELCHANGE(IDC_COMBO_THEME, &CTestSCColorThemeDlg::OnCbnSelchangeComboTheme)
+	ON_REGISTERED_MESSAGE(Message_CSCSystemButtons, &CTestSCColorThemeDlg::on_message_CSCSystemButtons)
 END_MESSAGE_MAP()
 
 
@@ -108,12 +118,12 @@ BOOL CTestSCColorThemeDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 작은 아이콘을 설정합니다.
 
 	// TODO: 여기에 추가 초기화 작업을 추가합니다.
+	SetWindowText(_T("Test_SCColorTheme"));
+
 	set_color_theme(CSCColorTheme::color_theme_dark_gray);
 	set_system_buttons(this, SC_MINIMIZE, SC_MAXIMIZE, SC_CLOSE);
-	//set_target_wnd(GetParent());
-	//set_title_font_bold();
+
 	set_titlebar_font_size(9);
-	//set_titlebar_height(32);
 	set_titlebar_icon(IDR_MAINFRAME, 16, 16);
 
 	m_resize.Create(this);
@@ -133,16 +143,32 @@ BOOL CTestSCColorThemeDlg::OnInitDialog()
 
 	int color_theme = theApp.GetProfileInt(_T("setting"), _T("color theme"), CSCColorTheme::color_theme_default);
 	m_combo_theme.SetCurSel(color_theme);
+
+	//부모(CSCThemeDlg) 의 m_theme 객체를 인덱스 기반으로 먼저 채운 다음, 객체 자체를 자식들에 전파.
+	//인덱스만 넘기면 자식이 default 만 재계산하여 부모가 커스터마이즈한 색 (titlebar 등) 이 누락된다.
 	set_color_theme(color_theme);
 
-	m_combo_theme.set_color_theme(color_theme);
-	m_static_color_theme.set_color_theme(color_theme);
-	m_static_edit.set_color_theme(color_theme);
-	m_edit.set_color_theme(color_theme);
-	m_tree.set_color_theme(m_theme.get_color_theme());
-	m_list.set_color_theme(m_theme.get_color_theme());
+	m_static_color_theme.set_color_theme(m_theme);
+	m_static_edit.set_color_theme(m_theme);
+	m_static_staticedit.set_color_theme(m_theme);
+	m_static_listbox.set_color_theme(m_theme);
 
-	m_edit.set_text(_T("This is a SCEdit control 컬러테마지원."));
+	m_combo_theme.set_color_theme(m_theme);
+	m_edit.set_color_theme(m_theme);
+	m_edit.set_line_align(DT_VCENTER);
+	m_static_scstaticedit.set_color_theme(m_theme);
+	m_listbox.set_color_theme(m_theme);
+	m_tree.set_color_theme(m_theme);
+	m_list.set_color_theme(m_theme);
+	m_btn_ok.set_color_theme(m_theme);
+	m_btn_cancel.set_color_theme(m_theme);
+
+	m_edit.set_text(_T("This is a SCEdit control 플레이그라운드."));
+
+	for (int i = 0; i < 5; i++)
+	{
+		m_listbox.insert(i, RandomText::GetSlogan());
+	}
 
 	RestoreWindowPosition(&theApp, this);
 
@@ -163,7 +189,7 @@ void CTestSCColorThemeDlg::OnSysCommand(UINT nID, LPARAM lParam)
 }
 
 // 대화 상자에 최소화 단추를 추가할 경우 아이콘을 그리려면
-//  아래 코드가 필요합니다.  문서/뷰 모델을 사용하는 MFC 애플리케이션의 경우에는
+//  아래 코드가 필요합니다.  문서/뷰 모델을 사용하는 MFC 응용 프로그램의 경우에는
 //  프레임워크에서 이 작업을 자동으로 수행합니다.
 
 void CTestSCColorThemeDlg::OnPaint()
@@ -214,12 +240,50 @@ void CTestSCColorThemeDlg::OnCbnSelchangeComboTheme()
 		return;
 
 	theApp.WriteProfileInt(_T("setting"), _T("color theme"), index);
+
+	//부모(CSCThemeDlg) 의 m_theme 객체를 인덱스 기반으로 먼저 채운 다음, 객체 자체를 자식들에 전파.
 	set_color_theme(index, true);
 
-	m_combo_theme.set_color_theme(index);
-	m_static_color_theme.set_color_theme(index);
-	m_static_edit.set_color_theme(index);
-	m_edit.set_color_theme(index);
-	m_tree.set_color_theme(index);
-	m_list.set_color_theme(index);
+	m_sys_buttons.set_color_theme(m_theme, true);
+	m_static_color_theme.set_color_theme(m_theme, true);
+	m_combo_theme.set_color_theme(m_theme, true);
+
+	m_static_edit.set_color_theme(m_theme, true);
+	m_edit.set_color_theme(m_theme, true);
+
+	m_static_staticedit.set_color_theme(m_theme, true);
+	m_static_scstaticedit.set_color_theme(m_theme, true);
+
+	m_static_listbox.set_color_theme(m_theme, true);
+	m_listbox.set_color_theme(m_theme, true);
+
+	m_tree.set_color_theme(m_theme, true);
+	m_list.set_color_theme(m_theme, true);
+	m_btn_ok.set_color_theme(m_theme, true);
+	m_btn_cancel.set_color_theme(m_theme, true);
+}
+
+LRESULT CTestSCColorThemeDlg::on_message_CSCSystemButtons(WPARAM wParam, LPARAM lParam)
+{
+	CSCSystemButtonsMessage* msg = (CSCSystemButtonsMessage*)wParam;
+
+	switch (msg->cmd)
+	{
+		case SC_PIN:
+			SetWindowPos(is_top_most(m_hWnd) ? &wndNoTopMost : &wndTopMost, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+			theApp.WriteProfileInt(_T("setting"), _T("always on top"), is_top_most(m_hWnd));
+			break;
+		case SC_MINIMIZE:
+			ShowWindow(SW_MINIMIZE);
+			break;
+		case SC_RESTORE:
+		case SC_MAXIMIZE:
+			ShowWindow(IsZoomed() ? SW_RESTORE : SW_MAXIMIZE);
+			break;
+		case SC_CLOSE:
+			EndDialog(0);
+			break;
+	}
+
+	return 0;
 }

@@ -1,0 +1,16 @@
+root = true
+
+# C/C++ 소스/헤더는 한글 코멘트 보존을 위해 UTF-8 BOM 강제.
+# VS 2017 15.6+ / VS 2022 가 이 charset 키를 인식해 저장 시 자동 적용.
+# (이게 없으면 VS 가 시스템 ANSI(CP949) 로 저장하려다 "유니코드 저장 불가" 다이얼로그를 매번 띄움.)
+[*.{cpp,h,hpp,c,cc,cxx,inl}]
+charset = utf-8-bom
+end_of_line = crlf
+indent_style = tab
+indent_size = 4
+trim_trailing_whitespace = false
+insert_final_newline = false
+
+# 리소스 파일은 VS 가 UTF-16 LE 로 관리.
+[*.rc]
+end_of_line = crlf
