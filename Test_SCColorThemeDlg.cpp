@@ -74,6 +74,8 @@ void CTestSCColorThemeDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_LISTBOX, m_listbox);
 	DDX_Control(pDX, IDC_STATIC_SCSTATICEDIT, m_static_staticedit);
 	DDX_Control(pDX, IDC_STATIC_CSCSTATIC_EDIT, m_static_scstaticedit);
+	DDX_Control(pDX, IDC_STATIC_PATHCTRL, m_static_pathctrl);
+	DDX_Control(pDX, IDC_PATH, m_path);
 }
 
 BEGIN_MESSAGE_MAP(CTestSCColorThemeDlg, CSCThemeDlg)
@@ -83,6 +85,7 @@ BEGIN_MESSAGE_MAP(CTestSCColorThemeDlg, CSCThemeDlg)
 	ON_WM_WINDOWPOSCHANGED()
 	ON_CBN_SELCHANGE(IDC_COMBO_THEME, &CTestSCColorThemeDlg::OnCbnSelchangeComboTheme)
 	ON_REGISTERED_MESSAGE(Message_CSCSystemButtons, &CTestSCColorThemeDlg::on_message_CSCSystemButtons)
+	ON_REGISTERED_MESSAGE(Message_CPathCtrl, &CTestSCColorThemeDlg::on_message_CPathCtrl)
 END_MESSAGE_MAP()
 
 
@@ -129,11 +132,15 @@ BOOL CTestSCColorThemeDlg::OnInitDialog()
 	m_resize.Create(this);
 	m_resize.Add(IDOK, 100, 100, 0, 0);
 	m_resize.Add(IDCANCEL, 100, 100, 0, 0);
+	m_resize.Add(IDC_STATIC_PATHCTRL, 0, 100, 0, 0);
+	m_resize.Add(IDC_PATH, 0, 100, 100, 0);
 	m_resize.Add(IDC_TREE, 0, 0, 0, 100);
 	m_resize.Add(IDC_LIST, 0, 0, 100, 100);
 
 	m_tree.set_as_shell_treectrl(&m_shell_imglist);
 	m_list.set_as_shell_listctrl(&m_shell_imglist);
+	m_path.set_shell_imagelist(&m_shell_imglist, true);
+	//m_path.set_path(_T("D:\\"));
 
 	m_combo_theme.set_line_height(12);
 	std::deque<CString> dq_color_theme;
@@ -152,6 +159,7 @@ BOOL CTestSCColorThemeDlg::OnInitDialog()
 	m_static_edit.set_color_theme(m_theme);
 	m_static_staticedit.set_color_theme(m_theme);
 	m_static_listbox.set_color_theme(m_theme);
+	m_static_pathctrl.set_color_theme(m_theme);
 
 	m_combo_theme.set_color_theme(m_theme);
 	m_edit.set_color_theme(m_theme);
@@ -162,6 +170,7 @@ BOOL CTestSCColorThemeDlg::OnInitDialog()
 	m_list.set_color_theme(m_theme);
 	m_btn_ok.set_color_theme(m_theme);
 	m_btn_cancel.set_color_theme(m_theme);
+	m_path.set_color_theme(m_theme);
 
 	m_edit.set_text(_T("This is a SCEdit control 플레이그라운드."));
 
@@ -261,6 +270,8 @@ void CTestSCColorThemeDlg::OnCbnSelchangeComboTheme()
 	m_list.set_color_theme(m_theme, true);
 	m_btn_ok.set_color_theme(m_theme, true);
 	m_btn_cancel.set_color_theme(m_theme, true);
+
+	m_path.set_color_theme(m_theme, true);
 }
 
 LRESULT CTestSCColorThemeDlg::on_message_CSCSystemButtons(WPARAM wParam, LPARAM lParam)
@@ -283,6 +294,38 @@ LRESULT CTestSCColorThemeDlg::on_message_CSCSystemButtons(WPARAM wParam, LPARAM 
 		case SC_CLOSE:
 			EndDialog(0);
 			break;
+	}
+
+	return 0;
+}
+
+LRESULT CTestSCColorThemeDlg::on_message_CPathCtrl(WPARAM wParam, LPARAM lParam)
+{
+	CPathCtrlMessage* pMsg = (CPathCtrlMessage*)wParam;
+
+	//m_path2도 동일한 처리가 필요하지만 이 예제에서는 m_path만 처리한다.
+	if (pMsg->pThis == &m_path)
+	{
+		if (pMsg->message == CPathCtrl::message_pathctrl_path_changed)
+		{
+			TRACE(_T("message_pathctrl_path_changed from m_path_local. path = %s\n"), pMsg->cur_path);
+			bool* res = (bool*)lParam;
+
+			//내 PC, 바탕 화면 등과 같은 경로일 경우는 PathFileExists()로 검사가 안되므로 다른 방법으로 유효한 패스인지 검사해야 한다.
+			if (PathFileExists(pMsg->cur_path))
+			{
+				//res에 true를 넘겨주면 경로가 유효하다는 의미가 되고 그래야만 CPathCtrl에서 경로를 변경하여 표시한다.
+				//유효한 경로인지 판별을 main에서 하는 이유는 remote일 경우도 있으므로.
+				if (res)
+					*res = true;
+			}
+			else
+			{
+				AfxMessageBox(_T("입력된 경로를 찾을 수 없습니다."));
+				if (res)
+					*res = false;
+			}
+		}
 	}
 
 	return 0;

@@ -18,8 +18,10 @@
 #define IDC_STATIC_LISTBOX              1007
 #define IDC_LISTBOX                     1008
 #define IDC_STATIC_SCSTATICEDIT         1009
-#define IDC_STATIC_SCSTATIC_EDIT        1010
 #define IDC_STATIC_CSCSTATIC_EDIT       1010
+#define IDC_STATIC_LISTBOX2             1011
+#define IDC_STATIC_PATHCTRL             1011
+#define IDC_PATH                        1012
 
 // Next default values for new objects
 // 

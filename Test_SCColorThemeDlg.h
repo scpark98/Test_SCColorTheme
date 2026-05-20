@@ -8,6 +8,7 @@
 #include "Common/ResizeCtrl.h"
 #include "Common/CComboBox/SCComboBox/SCComboBox.h"
 #include "Common/CStatic/SCStatic/SCStatic.h"
+#include "Common/CStatic/PathCtrl/PathCtrl.h"
 #include "Common/CEdit/SCEdit/SCEdit.h"
 #include "Common/CEdit/CSCStaticEdit/SCStaticEdit.h"
 #include "Common/system/ShellImageList/ShellImageList.h"
@@ -15,6 +16,7 @@
 #include "Common/CListCtrl/CVtListCtrlEx/VtListCtrlEx.h"
 #include "Common/CButton/GdiButton/GdiButton.h"
 #include "Common/CListBox/SCListBox/SCListBox.h"
+
 
 // CTestSCColorThemeDlg 대화 상자
 class CTestSCColorThemeDlg : public CSCThemeDlg
@@ -27,7 +29,7 @@ public:
 	CShellImageList		m_shell_imglist;
 
 	LRESULT				on_message_CSCSystemButtons(WPARAM wParam, LPARAM lParam);
-
+	LRESULT				on_message_CPathCtrl(WPARAM wParam, LPARAM lParam);
 
 // 대화 상자 데이터입니다.
 #ifdef AFX_DESIGN_TIME
@@ -63,4 +65,6 @@ public:
 	CSCListBox m_listbox;
 	CSCStatic m_static_staticedit;
 	CSCStaticEdit m_static_scstaticedit;
+	CSCStatic m_static_pathctrl;
+	CPathCtrl m_path;
 };
