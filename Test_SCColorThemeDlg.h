@@ -16,7 +16,7 @@
 #include "Common/CListCtrl/CVtListCtrlEx/VtListCtrlEx.h"
 #include "Common/CButton/GdiButton/GdiButton.h"
 #include "Common/CListBox/SCListBox/SCListBox.h"
-
+#include "Common/messagebox/CSCMessageBox/SCMessageBox.h"
 
 // CTestSCColorThemeDlg 대화 상자
 class CTestSCColorThemeDlg : public CSCThemeDlg
@@ -27,6 +27,7 @@ public:
 
 	CResizeCtrl			m_resize;
 	CShellImageList		m_shell_imglist;
+	CSCMessageBox		m_msgbox;
 
 	LRESULT				on_message_CSCSystemButtons(WPARAM wParam, LPARAM lParam);
 	LRESULT				on_message_CPathCtrl(WPARAM wParam, LPARAM lParam);

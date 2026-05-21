@@ -172,6 +172,11 @@ BOOL CTestSCColorThemeDlg::OnInitDialog()
 	m_btn_cancel.set_color_theme(m_theme);
 	m_path.set_color_theme(m_theme);
 
+	m_msgbox.create(this, _T("Test_SCColorTheme"), 0, false);
+	m_msgbox.set_color_theme(m_theme);
+	m_msgbox.set_message(_T("<cr=royalblue>테스트 <b><cr=red>메시지 박스</cr></b> 길이에 따라 <b>자동 조정</b>되며\n멀티라인 가능\n<cr=blue>기본 <b><cb=lightpink>HTML 태그</b></cb> 지원"),
+		MB_ICONINFORMATION);
+
 	m_edit.set_text(_T("This is a SCEdit control 플레이그라운드."));
 
 	for (int i = 0; i < 5; i++)
@@ -271,7 +276,10 @@ void CTestSCColorThemeDlg::OnCbnSelchangeComboTheme()
 	m_btn_ok.set_color_theme(m_theme, true);
 	m_btn_cancel.set_color_theme(m_theme, true);
 
+	m_static_pathctrl.set_color_theme(m_theme, true);
 	m_path.set_color_theme(m_theme, true);
+
+	m_msgbox.set_color_theme(m_theme, true);
 }
 
 LRESULT CTestSCColorThemeDlg::on_message_CSCSystemButtons(WPARAM wParam, LPARAM lParam)
