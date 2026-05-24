@@ -124,7 +124,7 @@ BOOL CTestSCColorThemeDlg::OnInitDialog()
 	SetWindowText(_T("Test_SCColorTheme"));
 
 	set_color_theme(CSCColorTheme::color_theme_dark_gray);
-	set_system_buttons(this, SC_MINIMIZE, SC_MAXIMIZE, SC_CLOSE);
+	set_system_buttons(this, SC_PIN, SC_MINIMIZE, SC_MAXIMIZE, SC_CLOSE);
 
 	set_titlebar_font_size(9);
 	set_titlebar_icon(IDR_MAINFRAME, 16, 16);
