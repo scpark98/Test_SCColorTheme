@@ -64,6 +64,11 @@ public:
 	CGdiButton m_btn_cancel;
 	CSCStatic m_static_listbox;
 	CSCListBox m_listbox;
+	//CSCListBox 폰트 quality 자동판정 시연용 (동적 생성) — 폰트·크기를 바꿔가며 자동 AA 전환 확인.
+	CSCComboBox m_combo_font_face;
+	CSCComboBox m_combo_font_size;
+	afx_msg void OnCbnSelchangeComboFontFace();
+	afx_msg void OnCbnSelchangeComboFontSize();
 	CSCStatic m_static_staticedit;
 	CSCStaticEdit m_static_scstaticedit;
 	CSCStatic m_static_pathctrl;
