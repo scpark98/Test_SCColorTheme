@@ -123,7 +123,9 @@ BOOL CTestSCColorThemeDlg::OnInitDialog()
 	// TODO: 여기에 추가 초기화 작업을 추가합니다.
 	SetWindowText(_T("Test_SCColorTheme"));
 
-	set_color_theme(CSCColorTheme::color_theme_dark_gray);
+	set_color_theme(CSCColorTheme::color_theme_gray);
+	//m_theme.set_theme_level(0.4f);
+
 	set_system_buttons(this, SC_PIN, SC_MINIMIZE, SC_MAXIMIZE, SC_CLOSE);
 
 	set_titlebar_font_size(9);
@@ -257,6 +259,7 @@ void CTestSCColorThemeDlg::OnCbnSelchangeComboTheme()
 
 	//부모(CSCThemeDlg) 의 m_theme 객체를 인덱스 기반으로 먼저 채운 다음, 객체 자체를 자식들에 전파.
 	set_color_theme(index, true);
+
 
 	m_sys_buttons.set_color_theme(m_theme, true);
 	m_static_color_theme.set_color_theme(m_theme, true);
