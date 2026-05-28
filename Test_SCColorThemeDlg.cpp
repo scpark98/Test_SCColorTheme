@@ -233,9 +233,9 @@ BOOL CTestSCColorThemeDlg::OnInitDialog()
 
 	m_edit.set_text(_T("This is a SCEdit control 플레이그라운드."));
 
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < 15; i++)
 	{
-		m_listbox.insert(i, RandomText::GetSlogan());
+		m_listbox.insert(i, i2S(i) + _T(":") + RandomText::GetSlogan());
 	}
 	m_listbox.insert(-1, _T("한글 테스트 텍스트"));
 
