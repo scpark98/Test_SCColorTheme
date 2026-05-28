@@ -178,8 +178,8 @@ BOOL CTestSCColorThemeDlg::OnInitDialog()
 	m_edit.set_color_theme(m_theme);
 	m_edit.set_line_align(DT_VCENTER);
 	m_static_scstaticedit.set_color_theme(m_theme);
-	m_listbox.set_color_theme(m_theme);
-	m_listbox.set_font_size(10);
+	//m_listbox.set_color_theme(m_theme);
+	//m_listbox.set_font_size(10);
 	m_tree.set_color_theme(m_theme);
 	m_list.set_color_theme(m_theme);
 	m_btn_ok.set_color_theme(m_theme);

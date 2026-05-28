@@ -31,12 +31,15 @@ CTestSCColorThemeApp::CTestSCColorThemeApp()
 // 유일한 CTestSCColorThemeApp 개체입니다.
 
 CTestSCColorThemeApp theApp;
-
+CSCLog gLog;
 
 // CTestSCColorThemeApp 초기화
 
 BOOL CTestSCColorThemeApp::InitInstance()
 {
+	gLog.set_each_create();
+	gLog.write_start_log();
+
 	// Windows XP에서는 InitCommonControlsEx()를 필요로 합니다.
 	// 사용하도록 지정하는 경우, Windows XP 상에서 반드시 InitCommonControlsEx()가 필요합니다.
 	// InitCommonControlsEx()를 사용하지 않으면 창을 만들 수 없습니다.
