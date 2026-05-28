@@ -73,4 +73,6 @@ public:
 	CSCStaticEdit m_static_scstaticedit;
 	CSCStatic m_static_pathctrl;
 	CPathCtrl m_path;
+	afx_msg void OnBnClickedButtonListboxAdd();
+	afx_msg void OnBnClickedButtonListboxDelete();
 };

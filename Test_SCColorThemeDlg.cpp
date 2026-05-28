@@ -97,6 +97,8 @@ BEGIN_MESSAGE_MAP(CTestSCColorThemeDlg, CSCThemeDlg)
 	ON_CBN_SELCHANGE(IDC_COMBO_FONT_SIZE, &CTestSCColorThemeDlg::OnCbnSelchangeComboFontSize)
 	ON_REGISTERED_MESSAGE(Message_CSCSystemButtons, &CTestSCColorThemeDlg::on_message_CSCSystemButtons)
 	ON_REGISTERED_MESSAGE(Message_CPathCtrl, &CTestSCColorThemeDlg::on_message_CPathCtrl)
+	ON_BN_CLICKED(IDC_BUTTON_LISTBOX_ADD, &CTestSCColorThemeDlg::OnBnClickedButtonListboxAdd)
+	ON_BN_CLICKED(IDC_BUTTON_LISTBOX_DELETE, &CTestSCColorThemeDlg::OnBnClickedButtonListboxDelete)
 END_MESSAGE_MAP()
 
 
@@ -180,6 +182,7 @@ BOOL CTestSCColorThemeDlg::OnInitDialog()
 	m_static_scstaticedit.set_color_theme(m_theme);
 	//m_listbox.set_color_theme(m_theme);
 	//m_listbox.set_font_size(10);
+	//m_listbox.set_show_selection_always(false);
 	m_tree.set_color_theme(m_theme);
 	m_list.set_color_theme(m_theme);
 	m_btn_ok.set_color_theme(m_theme);
@@ -412,4 +415,16 @@ LRESULT CTestSCColorThemeDlg::on_message_CPathCtrl(WPARAM wParam, LPARAM lParam)
 	}
 
 	return 0;
+}
+
+void CTestSCColorThemeDlg::OnBnClickedButtonListboxAdd()
+{
+	int index = m_listbox.add(_T("new item"));
+	m_listbox.SetSel(index);
+	m_listbox.edit(index);
+}
+
+void CTestSCColorThemeDlg::OnBnClickedButtonListboxDelete()
+{
+	m_listbox.delete_items();
 }
