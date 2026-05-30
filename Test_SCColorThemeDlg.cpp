@@ -180,7 +180,7 @@ BOOL CTestSCColorThemeDlg::OnInitDialog()
 	m_edit.set_color_theme(m_theme);
 	m_edit.set_line_align(DT_VCENTER);
 	m_static_scstaticedit.set_color_theme(m_theme);
-	//m_listbox.set_color_theme(m_theme);
+	m_listbox.set_color_theme(m_theme);
 	//m_listbox.set_font_size(10);
 	//m_listbox.set_show_selection_always(false);
 	m_tree.set_color_theme(m_theme);
@@ -238,6 +238,7 @@ BOOL CTestSCColorThemeDlg::OnInitDialog()
 		m_listbox.insert(i, i2S(i) + _T(":") + RandomText::GetSlogan());
 	}
 	m_listbox.insert(-1, _T("한글 테스트 텍스트"));
+	m_listbox.set_use_edit();
 
 	RestoreWindowPosition(&theApp, this);
 
