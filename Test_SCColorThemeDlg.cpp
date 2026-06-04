@@ -349,6 +349,8 @@ void CTestSCColorThemeDlg::OnCbnSelchangeComboFontFace()
 
 	//set_font_name 이 ReconstructFont 를 호출 → 새 폰트의 비트맵 보유 여부로 AA 모드를 자동 재판정.
 	m_listbox.set_font_name(g_font_faces[i]);
+	m_edit.set_font_name(g_font_faces[i]);
+	m_static_scstaticedit.set_font_name(g_font_faces[i]);
 }
 
 void CTestSCColorThemeDlg::OnCbnSelchangeComboFontSize()
@@ -359,6 +361,8 @@ void CTestSCColorThemeDlg::OnCbnSelchangeComboFontSize()
 
 	//set_font_size 가 ReconstructFont 를 호출 → 새 크기에서 비트맵 보유 여부로 AA 모드를 자동 재판정.
 	m_listbox.set_font_size(g_font_sizes[i]);
+	m_edit.set_font_size(g_font_sizes[i]);
+	m_static_scstaticedit.set_font_size(g_font_sizes[i]);
 }
 
 LRESULT CTestSCColorThemeDlg::on_message_CSCSystemButtons(WPARAM wParam, LPARAM lParam)
