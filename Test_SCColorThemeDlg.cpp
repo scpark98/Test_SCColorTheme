@@ -14,16 +14,6 @@
 #define new DEBUG_NEW
 #endif
 
-//동적 생성하는 폰트 시연 콤보 ID (resource.h 의 IDC_ 최대값 1012 위, command 범위 32771 아래).
-#define IDC_COMBO_FONT_FACE			1101
-#define IDC_COMBO_FONT_SIZE			1102
-
-//폰트·크기를 바꿔가며 quality 자동판정을 확인하는 콤보 항목 — 콤보 인덱스로 그대로 참조.
-//굴림/궁서/돋움/Tahoma/Verdana = 작은 크기에 비트맵 내장(또렷), Segoe UI/맑은 고딕 = 순수 벡터(전 크기 AA).
-static const TCHAR* g_font_faces[] = { _T("Segoe UI"), _T("맑은 고딕"), _T("굴림"), _T("궁서"), _T("돋움"), _T("Tahoma"), _T("Verdana") };
-static const int g_font_sizes[] = { 9, 10, 11, 12, 13, 14, 16, 18, 20, 24, 28 };
-
-
 // 응용 프로그램 정보에 사용되는 CAboutDlg 대화 상자입니다.
 
 class CAboutDlg : public CDialogEx
@@ -85,6 +75,10 @@ void CTestSCColorThemeDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_STATIC_CSCSTATIC_EDIT, m_static_scstaticedit);
 	DDX_Control(pDX, IDC_STATIC_PATHCTRL, m_static_pathctrl);
 	DDX_Control(pDX, IDC_PATH, m_path);
+	DDX_Control(pDX, IDC_COMBO_FONT, m_combo_font);
+	DDX_Control(pDX, IDC_SLIDER_FONT_SIZE, m_slider_fontsize);
+	DDX_Control(pDX, IDC_STATIC_FONT_NAME, m_static_fontname);
+	DDX_Control(pDX, IDC_STATIC_FONT_SIZE, m_static_fontsize);
 }
 
 BEGIN_MESSAGE_MAP(CTestSCColorThemeDlg, CSCThemeDlg)
@@ -93,10 +87,10 @@ BEGIN_MESSAGE_MAP(CTestSCColorThemeDlg, CSCThemeDlg)
 	ON_WM_QUERYDRAGICON()
 	ON_WM_WINDOWPOSCHANGED()
 	ON_CBN_SELCHANGE(IDC_COMBO_THEME, &CTestSCColorThemeDlg::OnCbnSelchangeComboTheme)
-	ON_CBN_SELCHANGE(IDC_COMBO_FONT_FACE, &CTestSCColorThemeDlg::OnCbnSelchangeComboFontFace)
-	ON_CBN_SELCHANGE(IDC_COMBO_FONT_SIZE, &CTestSCColorThemeDlg::OnCbnSelchangeComboFontSize)
+	ON_CBN_SELCHANGE(IDC_COMBO_FONT, &CTestSCColorThemeDlg::OnCbnSelchangeComboFont)
 	ON_REGISTERED_MESSAGE(Message_CSCSystemButtons, &CTestSCColorThemeDlg::on_message_CSCSystemButtons)
 	ON_REGISTERED_MESSAGE(Message_CPathCtrl, &CTestSCColorThemeDlg::on_message_CPathCtrl)
+	ON_REGISTERED_MESSAGE(Message_CSCSliderCtrl, &CTestSCColorThemeDlg::on_message_CSCSliderCtrl)
 	ON_BN_CLICKED(IDC_BUTTON_LISTBOX_ADD, &CTestSCColorThemeDlg::OnBnClickedButtonListboxAdd)
 	ON_BN_CLICKED(IDC_BUTTON_LISTBOX_DELETE, &CTestSCColorThemeDlg::OnBnClickedButtonListboxDelete)
 END_MESSAGE_MAP()
@@ -170,64 +164,27 @@ BOOL CTestSCColorThemeDlg::OnInitDialog()
 	//인덱스만 넘기면 자식이 default 만 재계산하여 부모가 커스터마이즈한 색 (titlebar 등) 이 누락된다.
 	set_color_theme(color_theme);
 
-	m_static_color_theme.set_color_theme(m_theme);
-	m_static_edit.set_color_theme(m_theme);
-	m_static_staticedit.set_color_theme(m_theme);
-	m_static_listbox.set_color_theme(m_theme);
-	m_static_pathctrl.set_color_theme(m_theme);
+	m_combo_font.set_as_font_combo();
+	m_combo_font.set_line_height(16);
+	m_combo_font.set_color_theme(m_theme);
 
-	m_combo_theme.set_color_theme(m_theme);
-	m_edit.set_color_theme(m_theme);
+	m_slider_fontsize.set_style(CSCSliderCtrl::style_thumb_round);
+	m_slider_fontsize.set_range(6, 100);
+
 	m_edit.set_line_align(DT_VCENTER);
-	m_static_scstaticedit.set_color_theme(m_theme);
-	m_listbox.set_color_theme(m_theme);
 	//m_listbox.set_font_size(10);
 	//m_listbox.set_show_selection_always(false);
-	m_tree.set_color_theme(m_theme);
-	m_list.set_color_theme(m_theme);
-	m_btn_ok.set_color_theme(m_theme);
-	m_btn_cancel.set_color_theme(m_theme);
-	m_path.set_color_theme(m_theme);
 
-	//--- CSCListBox 폰트 quality 자동판정 시연 콤보 (동적 생성) — listbox 아래 [폰트][크기] ---
+	//CSCListBox 폰트 quality 자동판정 시연 — IDC_COMBO_FONT(폰트) + IDC_SLIDER_FONT_SIZE(크기).
 	//폰트가 그 크기에 비트맵을 가지면 DEFAULT_QUALITY(또렷), 없으면 ANTIALIASED_QUALITY(부드럽게)가 자동 적용.
 	//폰트(굴림=비트맵 / Segoe UI=벡터)와 크기를 바꿔가며 전환 경계를 직접 확인.
-	CRect rc_list;
-	m_listbox.GetWindowRect(rc_list);
-	ScreenToClient(rc_list);
-
-	const int gap = 6;
-	const int combo_drop_h = 200;	//Create 시 window height = dropdown 펼침 상한
-	int half = (rc_list.Width() - gap) / 2;
-	int combo_top = rc_list.bottom + gap;
-
-	CRect rc_face(rc_list.left, combo_top, rc_list.left + half, combo_top + combo_drop_h);
-	CRect rc_size(rc_face.right + gap, combo_top, rc_list.right, combo_top + combo_drop_h);
-
-	const DWORD combo_style = WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_VSCROLL | CBS_DROPDOWNLIST | CBS_OWNERDRAWFIXED | CBS_HASSTRINGS;
-	m_combo_font_face.Create(combo_style, rc_face, this, IDC_COMBO_FONT_FACE);
-	m_combo_font_size.Create(combo_style, rc_size, this, IDC_COMBO_FONT_SIZE);
-
-	m_combo_font_face.set_line_height(12);
-	m_combo_font_size.set_line_height(12);
-
-	for (const TCHAR* face : g_font_faces)
-		m_combo_font_face.AddString(face);
-	for (int pt : g_font_sizes)
-	{
-		CString s;
-		s.Format(_T("크기: %dpt"), pt);
-		m_combo_font_size.AddString(s);
-	}
-
-	m_combo_font_face.SetCurSel(0);	//Segoe UI (다이얼로그 상속 폰트와 동일)
-	m_combo_font_size.SetCurSel(1);	//10pt (listbox 초기 크기와 동일)
-
-	m_combo_font_face.set_color_theme(m_theme);
-	m_combo_font_size.set_color_theme(m_theme);
+	m_combo_font.SelectString(-1, _T("Segoe UI"));	//다이얼로그 상속 폰트와 동일
+	m_slider_fontsize.set_pos(10);					//listbox 초기 크기와 동일
 
 	m_msgbox.create(this, _T("Test_SCColorTheme"), 0, false);
-	m_msgbox.set_color_theme(m_theme);
+
+	//모든 자식 컨트롤 + msgbox 에 테마 전파 (msgbox 는 create 이후라야 하므로 여기서 호출).
+	apply_color_theme(false);
 	m_msgbox.set_message(_T("<cr=royalblue>테스트 <b><cr=red>메시지 박스</cr></b> 길이에 따라 <b>자동 조정</b>되며\n멀티라인 가능\n<cr=blue>기본 <b><cb=lightpink>HTML 태그</b></cb> 지원"),
 		MB_ICONINFORMATION);
 
@@ -314,55 +271,64 @@ void CTestSCColorThemeDlg::OnCbnSelchangeComboTheme()
 	//부모(CSCThemeDlg) 의 m_theme 객체를 인덱스 기반으로 먼저 채운 다음, 객체 자체를 자식들에 전파.
 	set_color_theme(index, true);
 
-
-	m_sys_buttons.set_color_theme(m_theme, true);
-	m_static_color_theme.set_color_theme(m_theme, true);
-	m_combo_theme.set_color_theme(m_theme, true);
-
-	m_static_edit.set_color_theme(m_theme, true);
-	m_edit.set_color_theme(m_theme, true);
-
-	m_static_staticedit.set_color_theme(m_theme, true);
-	m_static_scstaticedit.set_color_theme(m_theme, true);
-
-	m_static_listbox.set_color_theme(m_theme, true);
-	m_listbox.set_color_theme(m_theme, true);
-	m_combo_font_face.set_color_theme(m_theme, true);
-	m_combo_font_size.set_color_theme(m_theme, true);
-
-	m_tree.set_color_theme(m_theme, true);
-	m_list.set_color_theme(m_theme, true);
-	m_btn_ok.set_color_theme(m_theme, true);
-	m_btn_cancel.set_color_theme(m_theme, true);
-
-	m_static_pathctrl.set_color_theme(m_theme, true);
-	m_path.set_color_theme(m_theme, true);
-
-	m_msgbox.set_color_theme(m_theme, true);
+	apply_color_theme(true);
 }
 
-void CTestSCColorThemeDlg::OnCbnSelchangeComboFontFace()
+void CTestSCColorThemeDlg::apply_color_theme(bool invalidate)
 {
-	int i = m_combo_font_face.GetCurSel();
-	if (i < 0)
-		i = 0;
+	m_sys_buttons.set_color_theme(m_theme, invalidate);
+	m_static_color_theme.set_color_theme(m_theme, invalidate);
+	m_combo_theme.set_color_theme(m_theme, invalidate);
 
+	m_static_edit.set_color_theme(m_theme, invalidate);
+	m_edit.set_color_theme(m_theme, invalidate);
+
+	m_static_staticedit.set_color_theme(m_theme, invalidate);
+	m_static_scstaticedit.set_color_theme(m_theme, invalidate);
+
+	m_static_listbox.set_color_theme(m_theme, invalidate);
+	m_listbox.set_color_theme(m_theme, invalidate);
+	m_static_fontname.set_color_theme(m_theme, invalidate);
+	m_static_fontsize.set_color_theme(m_theme, invalidate);
+	m_combo_font.set_color_theme(m_theme, invalidate);
+	m_slider_fontsize.set_color_theme(m_theme, invalidate);
+
+	m_tree.set_color_theme(m_theme, invalidate);
+	m_list.set_color_theme(m_theme, invalidate);
+	m_btn_ok.set_color_theme(m_theme, invalidate);
+	m_btn_cancel.set_color_theme(m_theme, invalidate);
+
+	m_static_pathctrl.set_color_theme(m_theme, invalidate);
+	m_path.set_color_theme(m_theme, invalidate);
+
+	m_msgbox.set_color_theme(m_theme, invalidate);
+}
+
+void CTestSCColorThemeDlg::OnCbnSelchangeComboFont()
+{
+	//font combo 는 OnCbnSelchange 에서 m_lf 를 선택 폰트로 갱신하므로 get_font_name() 이 현재 선택을 반환.
 	//set_font_name 이 ReconstructFont 를 호출 → 새 폰트의 비트맵 보유 여부로 AA 모드를 자동 재판정.
-	m_listbox.set_font_name(g_font_faces[i]);
-	m_edit.set_font_name(g_font_faces[i]);
-	m_static_scstaticedit.set_font_name(g_font_faces[i]);
+	CString font_name = m_combo_font.get_font_name();
+	if (font_name.IsEmpty())
+		return;
+
+	m_listbox.set_font_name(font_name);
+	m_edit.set_font_name(font_name);
+	m_static_scstaticedit.set_font_name(font_name);
 }
 
-void CTestSCColorThemeDlg::OnCbnSelchangeComboFontSize()
+LRESULT CTestSCColorThemeDlg::on_message_CSCSliderCtrl(WPARAM wParam, LPARAM lParam)
 {
-	int i = m_combo_font_size.GetCurSel();
-	if (i < 0)
-		i = 0;
+	CSCSliderCtrlMsg* msg = (CSCSliderCtrlMsg*)wParam;
 
+	//grab / move / release 모두에서 현재 pos(=pt) 를 즉시 반영해 드래그 중에도 폰트 크기가 따라오게 한다.
 	//set_font_size 가 ReconstructFont 를 호출 → 새 크기에서 비트맵 보유 여부로 AA 모드를 자동 재판정.
-	m_listbox.set_font_size(g_font_sizes[i]);
-	m_edit.set_font_size(g_font_sizes[i]);
-	m_static_scstaticedit.set_font_size(g_font_sizes[i]);
+	int pt = msg->pos;
+	m_listbox.set_font_size(pt);
+	m_edit.set_font_size(pt);
+	m_static_scstaticedit.set_font_size(pt);
+	m_static_fontsize.set_textf(_T("Font size %d"), pt);
+	return 0;
 }
 
 LRESULT CTestSCColorThemeDlg::on_message_CSCSystemButtons(WPARAM wParam, LPARAM lParam)

@@ -17,6 +17,7 @@
 #include "Common/CButton/GdiButton/GdiButton.h"
 #include "Common/CListBox/SCListBox/SCListBox.h"
 #include "Common/messagebox/CSCMessageBox/SCMessageBox.h"
+#include "Common/CSliderCtrl/SCSliderCtrl/SCSliderCtrl.h"
 
 // CTestSCColorThemeDlg 대화 상자
 class CTestSCColorThemeDlg : public CSCThemeDlg
@@ -31,6 +32,10 @@ public:
 
 	LRESULT				on_message_CSCSystemButtons(WPARAM wParam, LPARAM lParam);
 	LRESULT				on_message_CPathCtrl(WPARAM wParam, LPARAM lParam);
+	LRESULT				on_message_CSCSliderCtrl(WPARAM wParam, LPARAM lParam);
+
+	//모든 자식 컨트롤 + msgbox 에 현재 m_theme 을 전파. invalidate=true 면 즉시 redraw (런타임 테마 변경 시).
+	void				apply_color_theme(bool invalidate);
 
 // 대화 상자 데이터입니다.
 #ifdef AFX_DESIGN_TIME
@@ -64,15 +69,15 @@ public:
 	CGdiButton m_btn_cancel;
 	CSCStatic m_static_listbox;
 	CSCListBox m_listbox;
-	//CSCListBox 폰트 quality 자동판정 시연용 (동적 생성) — 폰트·크기를 바꿔가며 자동 AA 전환 확인.
-	CSCComboBox m_combo_font_face;
-	CSCComboBox m_combo_font_size;
-	afx_msg void OnCbnSelchangeComboFontFace();
-	afx_msg void OnCbnSelchangeComboFontSize();
 	CSCStatic m_static_staticedit;
 	CSCStaticEdit m_static_scstaticedit;
 	CSCStatic m_static_pathctrl;
 	CPathCtrl m_path;
 	afx_msg void OnBnClickedButtonListboxAdd();
 	afx_msg void OnBnClickedButtonListboxDelete();
+	CSCComboBox m_combo_font;
+	afx_msg void OnCbnSelchangeComboFont();
+	CSCSliderCtrl m_slider_fontsize;
+	CSCStatic m_static_fontname;
+	CSCStatic m_static_fontsize;
 };
