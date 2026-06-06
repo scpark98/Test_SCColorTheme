@@ -14,6 +14,10 @@
 #define new DEBUG_NEW
 #endif
 
+//OnContextMenu 의 컬러 테마 동적 submenu 항목 ID 베이스. enum 인덱스에 더해 사용.
+//resource.h 의 _APS_NEXT_COMMAND_VALUE (32775) 보다 충분히 위 → 향후 정적 ID 와 충돌 방지.
+#define ID_MENU_COLOR_THEME_BASE   33000
+
 // 응용 프로그램 정보에 사용되는 CAboutDlg 대화 상자입니다.
 
 class CAboutDlg : public CDialogEx
@@ -79,6 +83,8 @@ void CTestSCColorThemeDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_SLIDER_FONT_SIZE, m_slider_fontsize);
 	DDX_Control(pDX, IDC_STATIC_FONT_NAME, m_static_fontname);
 	DDX_Control(pDX, IDC_STATIC_FONT_SIZE, m_static_fontsize);
+	DDX_Control(pDX, IDC_BUTTON_LISTBOX_ADD, m_button_listbox_add);
+	DDX_Control(pDX, IDC_BUTTON_LISTBOX_DELETE, m_button_listbox_delete);
 }
 
 BEGIN_MESSAGE_MAP(CTestSCColorThemeDlg, CSCThemeDlg)
@@ -91,8 +97,10 @@ BEGIN_MESSAGE_MAP(CTestSCColorThemeDlg, CSCThemeDlg)
 	ON_REGISTERED_MESSAGE(Message_CSCSystemButtons, &CTestSCColorThemeDlg::on_message_CSCSystemButtons)
 	ON_REGISTERED_MESSAGE(Message_CPathCtrl, &CTestSCColorThemeDlg::on_message_CPathCtrl)
 	ON_REGISTERED_MESSAGE(Message_CSCSliderCtrl, &CTestSCColorThemeDlg::on_message_CSCSliderCtrl)
+	ON_REGISTERED_MESSAGE(Message_CSCMenu, &CTestSCColorThemeDlg::on_message_CSCMenu)
 	ON_BN_CLICKED(IDC_BUTTON_LISTBOX_ADD, &CTestSCColorThemeDlg::OnBnClickedButtonListboxAdd)
 	ON_BN_CLICKED(IDC_BUTTON_LISTBOX_DELETE, &CTestSCColorThemeDlg::OnBnClickedButtonListboxDelete)
+	ON_WM_CONTEXTMENU()
 END_MESSAGE_MAP()
 
 
@@ -288,6 +296,10 @@ void CTestSCColorThemeDlg::apply_color_theme(bool invalidate)
 
 	m_static_listbox.set_color_theme(m_theme, invalidate);
 	m_listbox.set_color_theme(m_theme, invalidate);
+	m_listbox.set_color_theme(m_theme, invalidate);
+	m_button_listbox_add.set_color_theme(m_theme, invalidate);
+	m_button_listbox_delete.set_color_theme(m_theme, invalidate);
+
 	m_static_fontname.set_color_theme(m_theme, invalidate);
 	m_static_fontsize.set_color_theme(m_theme, invalidate);
 	m_combo_font.set_color_theme(m_theme, invalidate);
@@ -398,4 +410,54 @@ void CTestSCColorThemeDlg::OnBnClickedButtonListboxAdd()
 void CTestSCColorThemeDlg::OnBnClickedButtonListboxDelete()
 {
 	m_listbox.delete_items();
+}
+
+void CTestSCColorThemeDlg::OnContextMenu(CWnd* /*pWnd*/, CPoint point)
+{
+	if (m_menu.GetSafeHwnd() == NULL)
+		m_menu.create(this);
+	if (m_menu_color_theme.GetSafeHwnd() == NULL)
+		m_menu_color_theme.create(this);
+
+	//컬러 테마 submenu 동적 구성 — get_color_theme_list 순서대로 추가, 현재 테마에 check.
+	m_menu_color_theme.clear();
+	std::deque<CString> theme_list;
+	CSCColorTheme::get_color_theme_list(theme_list);
+	int cur_theme = m_theme.get_color_theme();
+	for (int i = 0; i < (int)theme_list.size(); i++)
+		m_menu_color_theme.add(ID_MENU_COLOR_THEME_BASE + i, theme_list[i]);
+	m_menu_color_theme.check_item(ID_MENU_COLOR_THEME_BASE + cur_theme, true);
+
+	//메인 메뉴 IDR_MENU_CONTEXT 로딩 후 정적 MENUITEM 인 ID_MENU_COLOR_THEME 를 같은 위치에서 submenu 로 교체.
+	m_menu.clear();
+	m_menu.load(IDR_MENU_CONTEXT, 0);
+	m_menu.replace_item_with_submenu(ID_MENU_COLOR_THEME, &m_menu_color_theme);
+
+	//현재 테마를 두 메뉴에 모두 적용.
+	m_menu.set_color_theme(m_theme);
+	m_menu_color_theme.set_color_theme(m_theme);
+
+	m_menu.popup_menu(point.x, point.y);
+}
+
+LRESULT CTestSCColorThemeDlg::on_message_CSCMenu(WPARAM wParam, LPARAM /*lParam*/)
+{
+	CSCMenuMessage* msg = (CSCMenuMessage*)wParam;
+	if (msg == NULL || msg->m_message != CSCMenu::message_scmenu_selchanged)
+		return 0;
+	if (msg->m_menu_item == NULL)
+		return 0;
+
+	int id = msg->m_menu_item->m_id;
+	if (id >= ID_MENU_COLOR_THEME_BASE)
+	{
+		int theme_index = id - ID_MENU_COLOR_THEME_BASE;
+		if (theme_index < 0 || theme_index >= m_combo_theme.GetCount())
+			return 0;
+
+		//combo 선택을 맞추고 combobox 선택 핸들러 흐름을 그대로 실행.
+		m_combo_theme.SetCurSel(theme_index);
+		OnCbnSelchangeComboTheme();
+	}
+	return 0;
 }

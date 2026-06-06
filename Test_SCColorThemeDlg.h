@@ -18,6 +18,7 @@
 #include "Common/CListBox/SCListBox/SCListBox.h"
 #include "Common/messagebox/CSCMessageBox/SCMessageBox.h"
 #include "Common/CSliderCtrl/SCSliderCtrl/SCSliderCtrl.h"
+#include "Common/CMenu/CSCMenuBar/SCMenu.h"
 
 // CTestSCColorThemeDlg 대화 상자
 class CTestSCColorThemeDlg : public CSCThemeDlg
@@ -33,6 +34,10 @@ public:
 	LRESULT				on_message_CSCSystemButtons(WPARAM wParam, LPARAM lParam);
 	LRESULT				on_message_CPathCtrl(WPARAM wParam, LPARAM lParam);
 	LRESULT				on_message_CSCSliderCtrl(WPARAM wParam, LPARAM lParam);
+	LRESULT				on_message_CSCMenu(WPARAM wParam, LPARAM lParam);
+
+	CSCMenu				m_menu;
+	CSCMenu				m_menu_color_theme;
 
 	//모든 자식 컨트롤 + msgbox 에 현재 m_theme 을 전파. invalidate=true 면 즉시 redraw (런타임 테마 변경 시).
 	void				apply_color_theme(bool invalidate);
@@ -80,4 +85,7 @@ public:
 	CSCSliderCtrl m_slider_fontsize;
 	CSCStatic m_static_fontname;
 	CSCStatic m_static_fontsize;
+	afx_msg void OnContextMenu(CWnd* /*pWnd*/, CPoint /*point*/);
+	CGdiButton m_button_listbox_add;
+	CGdiButton m_button_listbox_delete;
 };
