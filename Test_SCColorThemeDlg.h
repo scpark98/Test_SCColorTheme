@@ -35,6 +35,9 @@ public:
 	LRESULT				on_message_CPathCtrl(WPARAM wParam, LPARAM lParam);
 	LRESULT				on_message_CSCSliderCtrl(WPARAM wParam, LPARAM lParam);
 	LRESULT				on_message_CSCMenu(WPARAM wParam, LPARAM lParam);
+	LRESULT				on_message_CSCTreeCtrl(WPARAM wParam, LPARAM lParam);
+	LRESULT				on_message_CVtListCtrlEx(WPARAM wParam, LPARAM lParam);
+	afx_msg void		OnTvnSelchangedTree(NMHDR* pNMHDR, LRESULT* pResult);
 
 	CSCMenu				m_menu;
 	CSCMenu				m_menu_color_theme;

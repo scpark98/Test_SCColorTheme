@@ -98,6 +98,9 @@ BEGIN_MESSAGE_MAP(CTestSCColorThemeDlg, CSCThemeDlg)
 	ON_REGISTERED_MESSAGE(Message_CPathCtrl, &CTestSCColorThemeDlg::on_message_CPathCtrl)
 	ON_REGISTERED_MESSAGE(Message_CSCSliderCtrl, &CTestSCColorThemeDlg::on_message_CSCSliderCtrl)
 	ON_REGISTERED_MESSAGE(Message_CSCMenu, &CTestSCColorThemeDlg::on_message_CSCMenu)
+	ON_REGISTERED_MESSAGE(Message_CSCTreeCtrl, &CTestSCColorThemeDlg::on_message_CSCTreeCtrl)
+	ON_REGISTERED_MESSAGE(Message_CVtListCtrlEx, &CTestSCColorThemeDlg::on_message_CVtListCtrlEx)
+	ON_NOTIFY(TVN_SELCHANGED, IDC_TREE, &CTestSCColorThemeDlg::OnTvnSelchangedTree)
 	ON_BN_CLICKED(IDC_BUTTON_LISTBOX_ADD, &CTestSCColorThemeDlg::OnBnClickedButtonListboxAdd)
 	ON_BN_CLICKED(IDC_BUTTON_LISTBOX_DELETE, &CTestSCColorThemeDlg::OnBnClickedButtonListboxDelete)
 	ON_WM_CONTEXTMENU()
@@ -387,6 +390,10 @@ LRESULT CTestSCColorThemeDlg::on_message_CPathCtrl(WPARAM wParam, LPARAM lParam)
 				//유효한 경로인지 판별을 main에서 하는 이유는 remote일 경우도 있으므로.
 				if (res)
 					*res = true;
+
+				//tree/list 로 sync — 동일 path 면 각 컨트롤의 set_path 가드가 no-op 으로 cycle 차단.
+				m_tree.set_path(pMsg->cur_path);
+				m_list.set_path(pMsg->cur_path);
 			}
 			else
 			{
@@ -458,6 +465,48 @@ LRESULT CTestSCColorThemeDlg::on_message_CSCMenu(WPARAM wParam, LPARAM /*lParam*
 		//combo 선택을 맞추고 combobox 선택 핸들러 흐름을 그대로 실행.
 		m_combo_theme.SetCurSel(theme_index);
 		OnCbnSelchangeComboTheme();
+	}
+	return 0;
+}
+
+//tree 의 폴더 selection 변경 — TVN_SELCHANGED 표준 핸들러로 받아 list/path 로 sync.
+//(rename 후 path 변경은 별도 message_path_changed → on_message_CSCTreeCtrl 에서 처리.)
+void CTestSCColorThemeDlg::OnTvnSelchangedTree(NMHDR* /*pNMHDR*/, LRESULT* pResult)
+{
+	CString path = m_tree.get_path();
+	m_list.set_path(path);
+	m_path.set_path(path);
+	*pResult = 0;
+}
+
+LRESULT CTestSCColorThemeDlg::on_message_CSCTreeCtrl(WPARAM wParam, LPARAM /*lParam*/)
+{
+	CSCTreeCtrlMessage* msg = (CSCTreeCtrlMessage*)wParam;
+	if (msg == NULL)
+		return 0;
+
+	if (msg->message == CSCTreeCtrl::message_path_changed)
+	{
+		m_list.set_path(msg->param0);
+		m_path.set_path(msg->param0);
+	}
+	return 0;
+}
+
+LRESULT CTestSCColorThemeDlg::on_message_CVtListCtrlEx(WPARAM wParam, LPARAM lParam)
+{
+	CVtListCtrlExMessage* msg = (CVtListCtrlExMessage*)wParam;
+	if (msg == NULL)
+		return 0;
+
+	if (msg->message == CVtListCtrlEx::message_path_changed)
+	{
+		CString* p = (CString*)lParam;
+		if (p == NULL)
+			return 0;
+
+		m_tree.set_path(*p);
+		m_path.set_path(*p);
 	}
 	return 0;
 }
