@@ -373,18 +373,20 @@ LRESULT CTestSCColorThemeDlg::on_message_CSCSystemButtons(WPARAM wParam, LPARAM 
 
 LRESULT CTestSCColorThemeDlg::on_message_CPathCtrl(WPARAM wParam, LPARAM lParam)
 {
-	CPathCtrlMessage* pMsg = (CPathCtrlMessage*)wParam;
+	CPathCtrlMessage* msg = (CPathCtrlMessage*)wParam;
 
 	//m_path2도 동일한 처리가 필요하지만 이 예제에서는 m_path만 처리한다.
-	if (pMsg->pThis == &m_path)
+	if (msg->pThis == &m_path)
 	{
-		if (pMsg->message == CPathCtrl::message_pathctrl_path_changed)
+		if (msg->message == CPathCtrl::message_pathctrl_path_changed)
 		{
-			TRACE(_T("message_pathctrl_path_changed from m_path_local. path = %s\n"), pMsg->cur_path);
+			TRACE(_T("message_pathctrl_path_changed from m_path_local. path = %s\n"), msg->cur_path);
 			bool* res = (bool*)lParam;
+			CPathCtrl* pPath = (CPathCtrl*)(msg->pThis);
+			CString real_path = pPath->get_shell_imagelist()->convert_special_folder_to_real_path((pPath->get_is_local() ? 0 : 1), msg->cur_path);
 
 			//내 PC, 바탕 화면 등과 같은 경로일 경우는 PathFileExists()로 검사가 안되므로 다른 방법으로 유효한 패스인지 검사해야 한다.
-			if (PathFileExists(pMsg->cur_path))
+			if (PathFileExists(real_path))
 			{
 				//res에 true를 넘겨주면 경로가 유효하다는 의미가 되고 그래야만 CPathCtrl에서 경로를 변경하여 표시한다.
 				//유효한 경로인지 판별을 main에서 하는 이유는 remote일 경우도 있으므로.
@@ -392,8 +394,8 @@ LRESULT CTestSCColorThemeDlg::on_message_CPathCtrl(WPARAM wParam, LPARAM lParam)
 					*res = true;
 
 				//tree/list 로 sync — 동일 path 면 각 컨트롤의 set_path 가드가 no-op 으로 cycle 차단.
-				m_tree.set_path(pMsg->cur_path);
-				m_list.set_path(pMsg->cur_path);
+				m_tree.set_path(msg->cur_path);
+				m_list.set_path(msg->cur_path);
 			}
 			else
 			{
