@@ -330,6 +330,7 @@ void CTestSCColorThemeDlg::OnCbnSelchangeComboFont()
 	m_listbox.set_font_name(font_name);
 	m_edit.set_font_name(font_name);
 	m_static_scstaticedit.set_font_name(font_name);
+	m_msgbox.set_font(font_name);
 }
 
 LRESULT CTestSCColorThemeDlg::on_message_CSCSliderCtrl(WPARAM wParam, LPARAM lParam)
@@ -343,6 +344,7 @@ LRESULT CTestSCColorThemeDlg::on_message_CSCSliderCtrl(WPARAM wParam, LPARAM lPa
 	m_edit.set_font_size(pt);
 	m_static_scstaticedit.set_font_size(pt);
 	m_static_fontsize.set_textf(_T("Font size %d"), pt);
+	m_msgbox.set_font(_T(""), pt);
 	return 0;
 }
 
