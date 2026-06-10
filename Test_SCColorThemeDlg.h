@@ -19,6 +19,7 @@
 #include "Common/messagebox/CSCMessageBox/SCMessageBox.h"
 #include "Common/CSliderCtrl/SCSliderCtrl/SCSliderCtrl.h"
 #include "Common/CMenu/CSCMenuBar/SCMenu.h"
+#include "Common/ControlSplitter.h"
 
 // CTestSCColorThemeDlg 대화 상자
 class CTestSCColorThemeDlg : public CSCThemeDlg
@@ -91,4 +92,5 @@ public:
 	afx_msg void OnContextMenu(CWnd* /*pWnd*/, CPoint /*point*/);
 	CGdiButton m_button_listbox_add;
 	CGdiButton m_button_listbox_delete;
+	CControlSplitter m_splitter;
 };

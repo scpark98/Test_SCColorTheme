@@ -85,6 +85,7 @@ void CTestSCColorThemeDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_STATIC_FONT_SIZE, m_static_fontsize);
 	DDX_Control(pDX, IDC_BUTTON_LISTBOX_ADD, m_button_listbox_add);
 	DDX_Control(pDX, IDC_BUTTON_LISTBOX_DELETE, m_button_listbox_delete);
+	DDX_Control(pDX, IDC_SPLITTER, m_splitter);
 }
 
 BEGIN_MESSAGE_MAP(CTestSCColorThemeDlg, CSCThemeDlg)
@@ -156,6 +157,11 @@ BOOL CTestSCColorThemeDlg::OnInitDialog()
 	m_resize.Add(IDC_PATH, 0, 100, 100, 0);
 	m_resize.Add(IDC_TREE, 0, 0, 0, 100);
 	m_resize.Add(IDC_LIST, 0, 0, 100, 100);
+	m_resize.Add(IDC_SPLITTER, 0, 0, 0, 100);
+
+	m_splitter.set_type(CControlSplitter::CS_VERT);
+	m_splitter.AddToTopOrLeftCtrls(IDC_TREE);
+	m_splitter.AddToBottomOrRightCtrls(IDC_LIST);
 
 	m_tree.set_as_shell_treectrl(&m_shell_imglist);
 	m_list.set_as_shell_listctrl(&m_shell_imglist);
@@ -175,12 +181,14 @@ BOOL CTestSCColorThemeDlg::OnInitDialog()
 	//인덱스만 넘기면 자식이 default 만 재계산하여 부모가 커스터마이즈한 색 (titlebar 등) 이 누락된다.
 	set_color_theme(color_theme);
 
+	m_splitter.set_back_color(m_theme.cr_back);
 	m_combo_font.set_as_font_combo();
 	m_combo_font.set_line_height(16);
 	m_combo_font.set_color_theme(m_theme);
 
 	m_slider_fontsize.set_style(CSCSliderCtrl::style_thumb_round);
-	m_slider_fontsize.set_range(6, 100);
+	m_slider_fontsize.set_range(5, 100);
+	m_slider_fontsize.set_tic_freq(10);
 
 	m_edit.set_line_align(DT_VCENTER);
 	//m_listbox.set_font_size(10);
@@ -287,6 +295,8 @@ void CTestSCColorThemeDlg::OnCbnSelchangeComboTheme()
 
 void CTestSCColorThemeDlg::apply_color_theme(bool invalidate)
 {
+	m_splitter.set_back_color(m_theme.cr_back);
+
 	m_sys_buttons.set_color_theme(m_theme, invalidate);
 	m_static_color_theme.set_color_theme(m_theme, invalidate);
 	m_combo_theme.set_color_theme(m_theme, invalidate);
@@ -344,7 +354,7 @@ LRESULT CTestSCColorThemeDlg::on_message_CSCSliderCtrl(WPARAM wParam, LPARAM lPa
 	m_edit.set_font_size(pt);
 	m_static_scstaticedit.set_font_size(pt);
 	m_static_fontsize.set_textf(_T("Font size %d"), pt);
-	m_msgbox.set_font(_T(""), pt);
+	//m_msgbox.set_font(_T(""), pt);
 	return 0;
 }
 
