@@ -187,8 +187,10 @@ BOOL CTestSCColorThemeDlg::OnInitDialog()
 	m_combo_font.set_color_theme(m_theme);
 
 	m_slider_fontsize.set_style(CSCSliderCtrl::style_thumb_round);
-	m_slider_fontsize.set_range(5, 100);
-	m_slider_fontsize.set_tic_freq(10);
+	m_slider_fontsize.set_range(8, 108);
+	m_slider_fontsize.set_tic_freq(20);
+	//m_slider_fontsize.set_auto_snap(true);	//드래그 시 가장 가까운 틱으로 스냅 동작 확인
+	//m_slider_fontsize.set_tic_only();		//드래그 시 가장 가까운 틱으로만 이동
 
 	m_edit.set_line_align(DT_VCENTER);
 	//m_listbox.set_font_size(10);
