@@ -105,6 +105,7 @@ BEGIN_MESSAGE_MAP(CTestSCColorThemeDlg, CSCThemeDlg)
 	ON_BN_CLICKED(IDC_BUTTON_LISTBOX_ADD, &CTestSCColorThemeDlg::OnBnClickedButtonListboxAdd)
 	ON_BN_CLICKED(IDC_BUTTON_LISTBOX_DELETE, &CTestSCColorThemeDlg::OnBnClickedButtonListboxDelete)
 	ON_WM_CONTEXTMENU()
+	ON_WM_TIMER()
 END_MESSAGE_MAP()
 
 
@@ -219,6 +220,8 @@ BOOL CTestSCColorThemeDlg::OnInitDialog()
 	m_listbox.set_use_edit();
 
 	RestoreWindowPosition(&theApp, this);
+
+	SetTimer(timer_test, 100, NULL);
 
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
@@ -525,4 +528,23 @@ LRESULT CTestSCColorThemeDlg::on_message_CVtListCtrlEx(WPARAM wParam, LPARAM lPa
 		m_path.set_path(*p);
 	}
 	return 0;
+}
+
+void CTestSCColorThemeDlg::OnTimer(UINT_PTR nIDEvent)
+{
+	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+	if (nIDEvent == timer_test)
+	{
+		KillTimer(timer_test);
+		m_list.set_path(_T("C:\\Program Files (x86)"));
+		m_list.set_column_width(2, 500, true);
+		CRect rcw;
+		GetWindowRect(&rcw);
+		int x = rcw.left, y = rcw.top, w = rcw.Width();
+		MoveWindow(x, y, w, 460); m_list.Scroll(CSize(0, 100000));
+		MoveWindow(x, y, w, 440); m_list.Scroll(CSize(0, 100000));
+		MoveWindow(x, y, w, 420); m_list.Scroll(CSize(0, 100000));
+	}
+
+	CSCThemeDlg::OnTimer(nIDEvent);
 }

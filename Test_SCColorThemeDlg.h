@@ -46,6 +46,11 @@ public:
 	//모든 자식 컨트롤 + msgbox 에 현재 m_theme 을 전파. invalidate=true 면 즉시 redraw (런타임 테마 변경 시).
 	void				apply_color_theme(bool invalidate);
 
+	enum TIMER_ID
+	{
+		timer_test = 1,
+	};
+
 // 대화 상자 데이터입니다.
 #ifdef AFX_DESIGN_TIME
 	enum { IDD = IDD_TEST_SCCOLORTHEME_DIALOG };
@@ -93,4 +98,5 @@ public:
 	CGdiButton m_button_listbox_add;
 	CGdiButton m_button_listbox_delete;
 	CControlSplitter m_splitter;
+	afx_msg void OnTimer(UINT_PTR nIDEvent);
 };
