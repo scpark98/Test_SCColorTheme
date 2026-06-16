@@ -111,3 +111,45 @@ cli_w=443  hdr_w=448(=cli+5)  native_view=448  col_total=1309  need=870  lv_limi
 ## 8. 동작 원리 참고 (왜 이렇게 어려운가)
 
 native listctrl(report view)은 자체 가로/세로 스크롤·헤더 레이아웃을 강하게 관리하며, 우리가 NC 로 client 를 줄여도 **헤더는 client+5px 로 잡혀** native 스크롤 viewport 가 그 헤더 기준이 된다. overlay 스크롤바(색 커스텀 위해 native 스크롤바를 버림)와 native 의 content 레이아웃이 이 5px 에서 어긋나는 것이 마지막 난점.
+
+---
+
+## 9. 2026-06-16 작업 진행 (집에서 이어서 — 어디까지 했는지)
+
+### 9-1. 이번 세션에 **해결 완료** (Common/CVtListCtrlEx)
+
+1. **세로 끝 항목 잘림 + thumb 튐** — native nPage 가 partial row 포함 ceil 이라 max scroll 1 부족. **OnNcCalcSize 에서 세로바 시 하단 remainder 를 NC 추가 예약(`m_bottom_reserve`)** → itemArea=itemH 배수(ceil==floor) → 마지막 항목 완전 표시. v-bar 높이 +reserve, h-bar 위치 +reserve, OnNcPaint 하단 띠 fill 확장, thumb pin. **검증 OK.**
+2. **리사이즈 시 스크롤바 지연** — reserve 로 client 가 itemH 단위로만 변해 sub-row 성장 시 WM_SIZE 미발생 → **`OnWindowPosChanged` 에서 sync 호출**. **OK.**
+3. **선택 행 크기/날짜 컬럼 가독성** — 폴더 dim 회색을 `listctrlex_dim_color` sentinel 로(비선택 cr_text_dim / 선택 cr_text_selected). **OK.**
+4. **코너 좌상단 흰 사각형(#30)** — OnPaint 의 rcCornerBottom 제거. **OK.**
+5. **★리사이즈 중 스크롤바 자체가 안 그려지던 회귀(Endorphin2)★** — 원인: e114ad3 이후 overlay 바가 **부모 dialog 의 child**인데, `CSCThemeDlg::OnSize→Invalidate()`(SCThemeDlg.cpp:670)가 리사이즈마다 dialog 전체를 repaint 해 **바 child 위를 덮음**(WS_CLIPCHILDREN 없으면). **fix: `setup_scrollbar` 에서 `pParent->ModifyStyle(0, WS_CLIPCHILDREN)`**. **검증 OK.**
+
+§9-1 의 1~4 는 commit `5f90861`. 5 + 아래 진단은 이번 미push 분.
+
+### 9-2. **미해결 — 집에서 이어서**
+
+**증상:** Endorphin2 자막편집창(CSubtitleDlg, CSCThemeDlg 파생)에서 **top(1번) 항목이 헤더 바로 아래에 안 붙고 몇 px gap/overlap**. 클릭/스크롤하면 gap↔flush↔overlap 으로 바뀜. 예전부터 있던 재발 버그.
+
+**배제된 가설(반증 완료 — 다시 추측 말 것):**
+- header≠line(24/28)? → 아님. Test 를 24/28 로 맞춰도 재현 안 됨.
+- layered 창? → 아님. `parentLayered=0` 확인.
+- word-wrap/가변 행? → 아님. 단일 라인(사용자 명시).
+- → Endorphin2 고유 요소. Test 미재현, Endorphin2 몇 번 만에 재현.
+
+**확인된 사실:** 항목은 native 가 `DefWindowProc(WM_PAINT, memDC)`(OnPaint 1855/1875)로 그림 → gap 은 **native 내부 세로 scroll offset** 이 결정, `GetItemRect` 로만 관측.
+
+**시도했으나 실패:** `OnLvnEndScroll` top 항목 헤더 스냅(`dy=item.top-header`, `m_snapping` 가드). gap 이 스크롤 없이(클릭만)도 나와 LVN_ENDSCROLL 미발화 추정 → 무효.
+
+**다음 단계(측정부터, 추측 금지):** OnPaint 에 `[gap]` 로그 심어둠 — top 항목이 헤더와 어긋날 때 `topIdx/itemTop/itemBot/itemH/header_get/header_native/item0Top/item0H/lineH` 출력. **Endorphin2 에서 gap 재현 → `[gap]` 한 줄 확보 → 숫자로 (a)native scroll offset (b)헤더높이 불일치 (c)항목높이 중 무엇인지 확정 후 수정.**
+
+### 9-3. 현재 남은 진단 로그 (사용자 지시로 **유지** — 최종 정리 시 제거)
+
+- `VtListCtrlEx.cpp` 상단 `#include "../../log/SCLog/SCLog.h"`.
+- `[sync]`(sync_scrollbar), `[gap]`(OnPaint).
+- `m_snapping` 멤버 + OnLvnEndScroll 스냅(무효였지만 유지).
+- **주의:** 일반 컨트롤은 원래 logWrite 포함 push 금지지만, 이번엔 사용자 명시 지시로 진단 로그를 남긴 채 push(집↔회사 연속 디버깅). 버그 확정·수정 후 `[sync]`/`[gap]`/`SCLog include`/`m_snapping`+스냅 모두 제거하고 재push 할 것.
+
+### 9-4. 폐기한 dead-end (재시도 금지)
+
+- layered 가드 barfix / 무조건 barfix(부모 RDW_ALLCHILDREN|UPDATENOW): Test 에 동일 증상 유발 → 제거.
+- deferred-first-paint sync(초기 표시 보정): 초기 표시는 원래 정상이라 무의미 → 제거.
