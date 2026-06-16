@@ -99,4 +99,5 @@ public:
 	CGdiButton m_button_listbox_delete;
 	CControlSplitter m_splitter;
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
+	afx_msg void OnBnClickedOk();
 };

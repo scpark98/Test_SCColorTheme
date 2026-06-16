@@ -106,6 +106,7 @@ BEGIN_MESSAGE_MAP(CTestSCColorThemeDlg, CSCThemeDlg)
 	ON_BN_CLICKED(IDC_BUTTON_LISTBOX_DELETE, &CTestSCColorThemeDlg::OnBnClickedButtonListboxDelete)
 	ON_WM_CONTEXTMENU()
 	ON_WM_TIMER()
+	ON_BN_CLICKED(IDOK, &CTestSCColorThemeDlg::OnBnClickedOk)
 END_MESSAGE_MAP()
 
 
@@ -536,15 +537,20 @@ void CTestSCColorThemeDlg::OnTimer(UINT_PTR nIDEvent)
 	if (nIDEvent == timer_test)
 	{
 		KillTimer(timer_test);
-		m_list.set_path(_T("C:\\Program Files (x86)"));
-		m_list.set_column_width(2, 500, true);
-		CRect rcw;
-		GetWindowRect(&rcw);
-		int x = rcw.left, y = rcw.top, w = rcw.Width();
-		MoveWindow(x, y, w, 460); m_list.Scroll(CSize(0, 100000));
-		MoveWindow(x, y, w, 440); m_list.Scroll(CSize(0, 100000));
-		MoveWindow(x, y, w, 420); m_list.Scroll(CSize(0, 100000));
+		//m_list.set_path(_T("C:\\Program Files (x86)"));
+		//m_list.set_column_width(2, 500, true);
+		//CRect rcw;
+		//GetWindowRect(&rcw);
+		//int x = rcw.left, y = rcw.top, w = rcw.Width();
+		//MoveWindow(x, y, w, 460); m_list.Scroll(CSize(0, 100000));
+		//MoveWindow(x, y, w, 440); m_list.Scroll(CSize(0, 100000));
+		//MoveWindow(x, y, w, 420); m_list.Scroll(CSize(0, 100000));
 	}
 
 	CSCThemeDlg::OnTimer(nIDEvent);
+}
+
+void CTestSCColorThemeDlg::OnBnClickedOk()
+{
+	m_msgbox.DoModal(_T("asldf"));
 }
