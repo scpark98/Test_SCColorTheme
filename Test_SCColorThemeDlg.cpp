@@ -86,6 +86,9 @@ void CTestSCColorThemeDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_BUTTON_LISTBOX_ADD, m_button_listbox_add);
 	DDX_Control(pDX, IDC_BUTTON_LISTBOX_DELETE, m_button_listbox_delete);
 	DDX_Control(pDX, IDC_SPLITTER, m_splitter);
+	DDX_Control(pDX, IDC_RADIO_ALIGN_TOP, m_radio_top);
+	DDX_Control(pDX, IDC_RADIO_ALIGN_CENTER, m_radio_vcenter);
+	DDX_Control(pDX, IDC_RADIO_ALIGN_BOTTOM, m_radio_bottom);
 }
 
 BEGIN_MESSAGE_MAP(CTestSCColorThemeDlg, CSCThemeDlg)
@@ -107,6 +110,9 @@ BEGIN_MESSAGE_MAP(CTestSCColorThemeDlg, CSCThemeDlg)
 	ON_WM_CONTEXTMENU()
 	ON_WM_TIMER()
 	ON_BN_CLICKED(IDOK, &CTestSCColorThemeDlg::OnBnClickedOk)
+	ON_BN_CLICKED(IDC_RADIO_ALIGN_BOTTOM, &CTestSCColorThemeDlg::OnBnClickedRadioAlignBottom)
+	ON_BN_CLICKED(IDC_RADIO_ALIGN_TOP, &CTestSCColorThemeDlg::OnBnClickedRadioAlignTop)
+	ON_BN_CLICKED(IDC_RADIO_ALIGN_VCENTER, &CTestSCColorThemeDlg::OnBnClickedRadioAlignVCenter)
 END_MESSAGE_MAP()
 
 
@@ -160,6 +166,10 @@ BOOL CTestSCColorThemeDlg::OnInitDialog()
 	m_resize.Add(IDC_TREE, 0, 0, 0, 100);
 	m_resize.Add(IDC_LIST, 0, 0, 100, 100);
 	m_resize.Add(IDC_SPLITTER, 0, 0, 0, 100);
+
+	m_radio_top.set_auto_color(false);
+	m_radio_vcenter.set_auto_color(false);
+	m_radio_bottom.set_auto_color(false);
 
 	m_splitter.set_type(CControlSplitter::CS_VERT);
 	m_splitter.AddToTopOrLeftCtrls(IDC_TREE);
@@ -326,8 +336,13 @@ void CTestSCColorThemeDlg::apply_color_theme(bool invalidate)
 	m_combo_font.set_color_theme(m_theme, invalidate);
 	m_slider_fontsize.set_color_theme(m_theme, invalidate);
 
+	m_radio_top.set_color_theme(m_theme, invalidate);
+	m_radio_vcenter.set_color_theme(m_theme, invalidate);
+	m_radio_bottom.set_color_theme(m_theme, invalidate);
+
 	m_tree.set_color_theme(m_theme, invalidate);
 	m_list.set_color_theme(m_theme, invalidate);
+
 	m_btn_ok.set_color_theme(m_theme, invalidate);
 	m_btn_cancel.set_color_theme(m_theme, invalidate);
 
@@ -555,4 +570,22 @@ void CTestSCColorThemeDlg::OnTimer(UINT_PTR nIDEvent)
 void CTestSCColorThemeDlg::OnBnClickedOk()
 {
 	m_msgbox.DoModal(_T("asldf"));
+}
+
+void CTestSCColorThemeDlg::OnBnClickedRadioAlignTop()
+{
+	m_edit.set_line_align(DT_TOP);
+	m_static_scstaticedit.set_line_align(DT_TOP);
+}
+
+void CTestSCColorThemeDlg::OnBnClickedRadioAlignVCenter()
+{
+	m_edit.set_line_align(DT_VCENTER);
+	m_static_scstaticedit.set_line_align(DT_VCENTER);
+}
+
+void CTestSCColorThemeDlg::OnBnClickedRadioAlignBottom()
+{
+	m_edit.set_line_align(DT_BOTTOM);
+	m_static_scstaticedit.set_line_align(DT_BOTTOM);
 }

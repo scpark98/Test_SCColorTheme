@@ -100,4 +100,10 @@ public:
 	CControlSplitter m_splitter;
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
 	afx_msg void OnBnClickedOk();
+	CGdiButton m_radio_top;
+	CGdiButton m_radio_vcenter;
+	CGdiButton m_radio_bottom;
+	afx_msg void OnBnClickedRadioAlignBottom();
+	afx_msg void OnBnClickedRadioAlignTop();
+	afx_msg void OnBnClickedRadioAlignVCenter();
 };
