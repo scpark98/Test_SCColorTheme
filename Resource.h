@@ -36,9 +36,10 @@
 #define IDC_SLIDER_FONT_SIZE            1018
 #define IDC_SPLITTER                    1019
 #define IDC_RADIO_ALIGN_TOP             1020
-#define IDC_RADIO_ALIGN_CENTER          1021
 #define IDC_RADIO_ALIGN_VCENTER         1021
 #define IDC_RADIO_ALIGN_BOTTOM          1022
+#define IDC_CHECK1                      1023
+#define IDC_CHECK_DISABLE               1023
 #define ID_MAIN_32771                   32771
 #define ID_MAIN_32772                   32772
 #define ID_MENU_TEST                    32773
@@ -50,7 +51,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        131
 #define _APS_NEXT_COMMAND_VALUE         32775
-#define _APS_NEXT_CONTROL_VALUE         1021
+#define _APS_NEXT_CONTROL_VALUE         1024
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

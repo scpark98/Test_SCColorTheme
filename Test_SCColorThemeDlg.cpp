@@ -87,8 +87,9 @@ void CTestSCColorThemeDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_BUTTON_LISTBOX_DELETE, m_button_listbox_delete);
 	DDX_Control(pDX, IDC_SPLITTER, m_splitter);
 	DDX_Control(pDX, IDC_RADIO_ALIGN_TOP, m_radio_top);
-	DDX_Control(pDX, IDC_RADIO_ALIGN_CENTER, m_radio_vcenter);
+	DDX_Control(pDX, IDC_RADIO_ALIGN_VCENTER, m_radio_vcenter);
 	DDX_Control(pDX, IDC_RADIO_ALIGN_BOTTOM, m_radio_bottom);
+	DDX_Control(pDX, IDC_CHECK_DISABLE, m_check_disable);
 }
 
 BEGIN_MESSAGE_MAP(CTestSCColorThemeDlg, CSCThemeDlg)
@@ -113,6 +114,7 @@ BEGIN_MESSAGE_MAP(CTestSCColorThemeDlg, CSCThemeDlg)
 	ON_BN_CLICKED(IDC_RADIO_ALIGN_BOTTOM, &CTestSCColorThemeDlg::OnBnClickedRadioAlignBottom)
 	ON_BN_CLICKED(IDC_RADIO_ALIGN_TOP, &CTestSCColorThemeDlg::OnBnClickedRadioAlignTop)
 	ON_BN_CLICKED(IDC_RADIO_ALIGN_VCENTER, &CTestSCColorThemeDlg::OnBnClickedRadioAlignVCenter)
+	ON_BN_CLICKED(IDC_CHECK_DISABLE, &CTestSCColorThemeDlg::OnBnClickedCheckDisable)
 END_MESSAGE_MAP()
 
 
@@ -167,6 +169,7 @@ BOOL CTestSCColorThemeDlg::OnInitDialog()
 	m_resize.Add(IDC_LIST, 0, 0, 100, 100);
 	m_resize.Add(IDC_SPLITTER, 0, 0, 0, 100);
 
+	m_check_disable.set_auto_color(false);
 	m_radio_top.set_auto_color(false);
 	m_radio_vcenter.set_auto_color(false);
 	m_radio_bottom.set_auto_color(false);
@@ -336,6 +339,7 @@ void CTestSCColorThemeDlg::apply_color_theme(bool invalidate)
 	m_combo_font.set_color_theme(m_theme, invalidate);
 	m_slider_fontsize.set_color_theme(m_theme, invalidate);
 
+	m_check_disable.set_color_theme(m_theme, invalidate);
 	m_radio_top.set_color_theme(m_theme, invalidate);
 	m_radio_vcenter.set_color_theme(m_theme, invalidate);
 	m_radio_bottom.set_color_theme(m_theme, invalidate);
@@ -588,4 +592,13 @@ void CTestSCColorThemeDlg::OnBnClickedRadioAlignBottom()
 {
 	m_edit.set_line_align(DT_BOTTOM);
 	m_static_scstaticedit.set_line_align(DT_BOTTOM);
+}
+
+void CTestSCColorThemeDlg::OnBnClickedCheckDisable()
+{
+	m_edit.EnableWindow(m_check_disable.GetCheck() == BST_CHECKED ? FALSE : TRUE);
+	m_static_scstaticedit.EnableWindow(m_check_disable.GetCheck() == BST_CHECKED ? FALSE : TRUE);
+	m_radio_top.EnableWindow(m_check_disable.GetCheck() == BST_CHECKED ? FALSE : TRUE);
+	m_radio_vcenter.EnableWindow(m_check_disable.GetCheck() == BST_CHECKED ? FALSE : TRUE);
+	m_radio_bottom.EnableWindow(m_check_disable.GetCheck() == BST_CHECKED ? FALSE : TRUE);
 }

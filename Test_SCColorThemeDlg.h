@@ -106,4 +106,6 @@ public:
 	afx_msg void OnBnClickedRadioAlignBottom();
 	afx_msg void OnBnClickedRadioAlignTop();
 	afx_msg void OnBnClickedRadioAlignVCenter();
+	CGdiButton m_check_disable;
+	afx_msg void OnBnClickedCheckDisable();
 };
