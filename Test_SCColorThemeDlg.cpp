@@ -169,8 +169,8 @@ BOOL CTestSCColorThemeDlg::OnInitDialog()
 	m_list.set_as_shell_listctrl(&m_shell_imglist);
 	m_path.set_shell_imagelist(&m_shell_imglist, true);
 	//m_path.set_path(_T("D:\\"));
-	m_list.set_header_height(24);
-	m_list.set_line_height(28);
+	//m_list.set_header_height(24);
+	//m_list.set_line_height(28);
 
 	m_combo_theme.set_line_height(12);
 	std::deque<CString> dq_color_theme;
