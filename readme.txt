@@ -10,8 +10,8 @@
 - CSCThemeDlg
 - CPathCtrl
 - CSCSliderCtrl
+- CGdiButton (Push, Check, Radio)
 
 [반영 예정 클래스]
-- CGdiButton (Push, Check, Radio)
 - CMacProgress?
 - CRichEditCtrlEx
