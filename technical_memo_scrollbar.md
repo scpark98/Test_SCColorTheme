@@ -1,4 +1,4 @@
-# CVtListCtrlEx 스크롤바(CSCScrollbar) 작업 메모
+﻿# CVtListCtrlEx 스크롤바(CSCScrollbar) 작업 메모
 
 작성 2026-06-14. 다음 세션에서 이어서 작업하기 위한 기술 메모.
 대상 파일: `D:\1.Projects_C++\Common\CListCtrl\CVtListCtrlEx\VtListCtrlEx.{h,cpp}`
