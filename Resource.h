@@ -11,6 +11,7 @@
 #define IDR_MENU_CONTEXT                130
 #define IDC_TREE                        1000
 #define IDC_LIST                        1001
+#define IDC_LIST2                       1002
 #define IDC_COMBO1                      1003
 #define IDC_COMBO_THEME                 1003
 #define IDC_STATIC_COLOR_THEME          1004

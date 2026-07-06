@@ -90,6 +90,7 @@ void CTestSCColorThemeDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_RADIO_ALIGN_VCENTER, m_radio_vcenter);
 	DDX_Control(pDX, IDC_RADIO_ALIGN_BOTTOM, m_radio_bottom);
 	DDX_Control(pDX, IDC_CHECK_DISABLE, m_check_disable);
+	DDX_Control(pDX, IDC_LIST2, m_list2);
 }
 
 BEGIN_MESSAGE_MAP(CTestSCColorThemeDlg, CSCThemeDlg)
@@ -168,6 +169,7 @@ BOOL CTestSCColorThemeDlg::OnInitDialog()
 	m_resize.Add(IDC_TREE, 0, 0, 0, 100);
 	m_resize.Add(IDC_LIST, 0, 0, 100, 100);
 	m_resize.Add(IDC_SPLITTER, 0, 0, 0, 100);
+	m_resize.Add(IDC_LIST2, 0, 0, 0, 100);
 
 	m_check_disable.set_auto_color(false);
 	m_radio_top.set_auto_color(false);
@@ -238,11 +240,116 @@ BOOL CTestSCColorThemeDlg::OnInitDialog()
 	m_listbox.insert(-1, _T("한글 테스트 텍스트"));
 	m_listbox.set_use_edit();
 
+	init_list2();
+
 	RestoreWindowPosition(&theApp, this);
 
 	SetTimer(timer_test, 100, NULL);
 
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
+}
+
+//shelllist가 아닌 일반 ListCtrl
+void CTestSCColorThemeDlg::init_list2()
+{
+	//m_list2.set_use_virtual_list(false);
+
+	m_list2.SetExtendedStyle(LVS_EX_CHECKBOXES | LVS_EX_FULLROWSELECT);// | LVS_EX_GRIDLINES);
+	//m_list2.SetExtendedStyle(LVS_EX_CHECKBOXES | LVS_EX_AUTOCHECKSELECT | LVS_EX_GRIDLINES | LVS_EX_FLATSB);
+	//m_list2.SetExtendedStyle(LVS_EX_GRIDLINES | LVS_EX_FLATSB);
+
+	m_list2.set_headings(_T("No,50;Name,150;Slogan,200;Score,100;Memo,200"));
+	//m_list2.set_color_theme(CVtListCtrlEx::color_theme_dark_gray);
+	//m_list2.set_line_height(theApp.GetProfileInt(_T("list name"), _T("line height"), 80));
+
+	m_list2.set_font_size(theApp.GetProfileInt(_T("list"), _T("font size"), 9));
+	m_list2.set_font_name(theApp.GetProfileString(_T("list"), _T("font name"), _T("맑은 고딕")));
+
+	m_list2.restore_column_width(&theApp, _T("list name"));
+	m_list2.set_header_height(24);
+	m_list2.set_line_height(24);
+	//m_list2.get_header_ctrl()->set_font_bold();
+	//m_list2.get_header_ctrl()->use_header_separator(false);
+
+	//m_list2.draw_top_line(true);// , Gdiplus::Color::Red);
+	//m_list2.draw_bottom_line(true);// , Gdiplus::Color::Blue);
+
+	//
+	m_list2.set_use_own_imagelist(false);
+	//m_list2.set_shell_imagelist(&m_shell_imagelist);
+
+
+	//m_list2.set_column_text_align(0, HDF_CENTER);
+	//m_list2.set_column_text_align(0, HDF_CENTER);
+	m_list2.set_column_text_align(1, HDF_CENTER);
+	m_list2.set_column_text_align(2, HDF_RIGHT);
+	/*
+	m_list2.set_header_text_align(0, HDF_CENTER);
+	m_list2.set_header_text_align(1, HDF_CENTER);
+	m_list2.set_header_text_align(2, HDF_CENTER);
+	m_list2.set_header_text_align(3, HDF_LEFT);
+	*/
+	//m_list2.set_column_data_type(col_score, CVtListCtrlEx::column_data_type_percentage_grid);
+	m_list2.set_column_data_type(col_score, CSCListCtrl::column_data_type_progress);
+	m_list2.show_progress_text();
+	//m_list2.set_back_alternate_color(true, Gdiplus::Color(242, 242, 242));
+	//m_list2.set_progress_color(Gdiplus::Color(255, 187, 255));
+	//m_list2.set_progress_text_color(Gdiplus::Color::Black);
+	m_list2.allow_edit();
+
+	//RandomText를 이용한 테스트 데이터 추가
+	srand(time(NULL));
+
+	//debug mode에서
+	//10,000개 추가 시 invalidate = false, SetRedraw(FALSE) 할 경우 약 6초, true로 할 경우는 약 26초 소요
+
+	long t0 = clock();
+	bool make_invalidate = false;
+	//m_list2.SetRedraw(FALSE);
+
+	for (int i = 0; i < 15; i++)
+	{
+		int index = m_list2.add_item(i2S(i) + RandomText::extension(true), -1, false, make_invalidate);
+		m_list2.set_text(index, col_name, RandomText::GetName(), make_invalidate);
+		//m_list2.set_text_color(index, 0, RGB(index, index, index));//random19937(RGB(0,0,0), RGB(255,255,255)));
+		m_list2.set_text(index, col_slogan, RandomText::GetSlogan(), make_invalidate);
+		//m_list2.set_text_color(index, index, RGB(indexi, 0, 0));//random19937(RGB(0,0,0), RGB(255,255,255)));
+		m_list2.set_text(index, col_score, i2S(random19937(0, 100)), make_invalidate);
+		//m_list2.set_text_color(index, 2, RGB(0, 0, 255-index));//random19937(RGB(0,0,0), RGB(255,255,255)));
+		m_list2.set_text(index, col_memo, RandomText::GetName(), make_invalidate);
+	}
+
+	//m_list2.SetRedraw(TRUE);
+	SetWindowText(i2S(clock() - t0));
+
+	//수동 테스트 데이터 추가
+	m_list2.add_item(_T("0.txt"));
+	m_list2.add_item(_T("1.mp4"));
+	m_list2.add_item(_T("2.html"));
+	m_list2.add_item(_T("3.exe"));
+	m_list2.add_item(_T("4.dat"));
+	m_list2.add_item(_T("5.ini"));
+
+	m_list2.SetCheck(0, true);
+
+	m_list2.set_text(0, col_score, _T("50"));
+	m_list2.set_text(1, col_score, _T("fail"));
+
+	for (int i = 0; i < m_list2.size(); i++)
+		m_list2.SetItemData(i, i);
+
+	m_list2.set_text_color(0, col_no, Gdiplus::Color::Red);
+	m_list2.set_back_color(0, col_no, Gdiplus::Color::RoyalBlue);
+	m_list2.set_text_color(1, col_name, Gdiplus::Color::Pink);
+
+	//m_list2.set_item_color(2, 0, Gdiplus::Color::Red, Gdiplus::Color::Blue);
+	//m_list2.set_text_color(3, 0, Gdiplus::Color::Red);
+	//m_list2.set_back_color(3, 1, Gdiplus::Color::Red);
+	//m_list2.set_item_color(4, 0, Gdiplus::Color::DeepPink, Gdiplus::Color::DodgerBlue);
+	//m_list2.set_text_color(5, 0, Gdiplus::Color::DeepPink);
+	//m_list2.set_back_color(5, 1, Gdiplus::Color::DeepPink);
+
+	m_list2.set_use_drag_and_drop();
 }
 
 void CTestSCColorThemeDlg::OnSysCommand(UINT nID, LPARAM lParam)

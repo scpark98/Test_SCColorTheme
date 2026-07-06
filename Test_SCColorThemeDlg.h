@@ -32,6 +32,17 @@ public:
 	CShellImageList		m_shell_imglist;
 	CSCMessageBox		m_msgbox;
 
+	//shelllist가 아닌 일반 ListCtrl
+	enum list_column
+	{
+		col_no = 0,
+		col_name,
+		col_slogan,
+		col_score,
+		col_memo,
+	};
+	void				init_list2();
+
 	LRESULT				on_message_CSCSystemButtons(WPARAM wParam, LPARAM lParam);
 	LRESULT				on_message_CPathCtrl(WPARAM wParam, LPARAM lParam);
 	LRESULT				on_message_CSCSliderCtrl(WPARAM wParam, LPARAM lParam);
@@ -108,4 +119,5 @@ public:
 	afx_msg void OnBnClickedRadioAlignVCenter();
 	CGdiButton m_check_disable;
 	afx_msg void OnBnClickedCheckDisable();
+	CSCListCtrl m_list2;
 };
