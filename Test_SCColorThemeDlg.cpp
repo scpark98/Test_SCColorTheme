@@ -184,8 +184,9 @@ BOOL CTestSCColorThemeDlg::OnInitDialog()
 	m_list.set_header_height(28);
 	m_list.set_line_height(26);
 	m_list.set_smooth_scroll(true);		//20260706 by claude. [실험] 픽셀 페인트(부분행/하단여백0) 모드 검증용.
+	m_list.SetExtendedStyle(m_list.GetExtendedStyle() | LVS_EX_CHECKBOXES);
 
-	m_tree.set_path(_T("C:\\Program Files (x86)"));
+	m_tree.set_path(_T("F:\\download"));
 
 	m_combo_theme.set_line_height(12);
 	std::deque<CString> dq_color_theme;
