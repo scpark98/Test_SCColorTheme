@@ -104,7 +104,7 @@ BEGIN_MESSAGE_MAP(CTestSCColorThemeDlg, CSCThemeDlg)
 	ON_REGISTERED_MESSAGE(Message_CSCSliderCtrl, &CTestSCColorThemeDlg::on_message_CSCSliderCtrl)
 	ON_REGISTERED_MESSAGE(Message_CSCMenu, &CTestSCColorThemeDlg::on_message_CSCMenu)
 	ON_REGISTERED_MESSAGE(Message_CSCTreeCtrl, &CTestSCColorThemeDlg::on_message_CSCTreeCtrl)
-	ON_REGISTERED_MESSAGE(Message_CVtListCtrlEx, &CTestSCColorThemeDlg::on_message_CVtListCtrlEx)
+	ON_REGISTERED_MESSAGE(Message_CSCListCtrl, &CTestSCColorThemeDlg::on_message_CSCListCtrl)
 	ON_NOTIFY(TVN_SELCHANGED, IDC_TREE, &CTestSCColorThemeDlg::OnTvnSelchangedTree)
 	ON_BN_CLICKED(IDC_BUTTON_LISTBOX_ADD, &CTestSCColorThemeDlg::OnBnClickedButtonListboxAdd)
 	ON_BN_CLICKED(IDC_BUTTON_LISTBOX_DELETE, &CTestSCColorThemeDlg::OnBnClickedButtonListboxDelete)
@@ -181,9 +181,11 @@ BOOL CTestSCColorThemeDlg::OnInitDialog()
 	m_tree.set_as_shell_treectrl(&m_shell_imglist);
 	m_list.set_as_shell_listctrl(&m_shell_imglist);
 	m_path.set_shell_imagelist(&m_shell_imglist, true);
-	//m_path.set_path(_T("D:\\"));
-	//m_list.set_header_height(24);
-	//m_list.set_line_height(28);
+	m_list.set_header_height(28);
+	m_list.set_line_height(26);
+	m_list.set_smooth_scroll(true);		//20260706 by claude. [실험] 픽셀 페인트(부분행/하단여백0) 모드 검증용.
+
+	m_tree.set_path(_T("C:\\Program Files (x86)"));
 
 	m_combo_theme.set_line_height(12);
 	std::deque<CString> dq_color_theme;
@@ -534,13 +536,13 @@ LRESULT CTestSCColorThemeDlg::on_message_CSCTreeCtrl(WPARAM wParam, LPARAM /*lPa
 	return 0;
 }
 
-LRESULT CTestSCColorThemeDlg::on_message_CVtListCtrlEx(WPARAM wParam, LPARAM lParam)
+LRESULT CTestSCColorThemeDlg::on_message_CSCListCtrl(WPARAM wParam, LPARAM lParam)
 {
-	CVtListCtrlExMessage* msg = (CVtListCtrlExMessage*)wParam;
+	CSCListCtrlMessage* msg = (CSCListCtrlMessage*)wParam;
 	if (msg == NULL)
 		return 0;
 
-	if (msg->message == CVtListCtrlEx::message_path_changed)
+	if (msg->message == CSCListCtrl::message_path_changed)
 	{
 		CString* p = (CString*)lParam;
 		if (p == NULL)

@@ -13,7 +13,7 @@
 #include "Common/CEdit/CSCStaticEdit/SCStaticEdit.h"
 #include "Common/system/ShellImageList/ShellImageList.h"
 #include "Common/CTreeCtrl/SCTreeCtrl/SCTreeCtrl.h"
-#include "Common/CListCtrl/CVtListCtrlEx/VtListCtrlEx.h"
+#include "Common/CListCtrl/CSCListCtrl/SCListCtrl.h"
 #include "Common/CButton/GdiButton/GdiButton.h"
 #include "Common/CListBox/SCListBox/SCListBox.h"
 #include "Common/messagebox/CSCMessageBox/SCMessageBox.h"
@@ -37,7 +37,7 @@ public:
 	LRESULT				on_message_CSCSliderCtrl(WPARAM wParam, LPARAM lParam);
 	LRESULT				on_message_CSCMenu(WPARAM wParam, LPARAM lParam);
 	LRESULT				on_message_CSCTreeCtrl(WPARAM wParam, LPARAM lParam);
-	LRESULT				on_message_CVtListCtrlEx(WPARAM wParam, LPARAM lParam);
+	LRESULT				on_message_CSCListCtrl(WPARAM wParam, LPARAM lParam);
 	afx_msg void		OnTvnSelchangedTree(NMHDR* pNMHDR, LRESULT* pResult);
 
 	CSCMenu				m_menu;
@@ -72,7 +72,7 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	CSCTreeCtrl m_tree;
-	CVtListCtrlEx m_list;
+	CSCListCtrl m_list;
 	afx_msg void OnWindowPosChanged(WINDOWPOS* lpwndpos);
 	CSCComboBox m_combo_theme;
 	afx_msg void OnCbnSelchangeComboTheme();

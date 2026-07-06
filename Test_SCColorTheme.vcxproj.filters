@@ -19,6 +19,9 @@
     <Filter Include="Common\CVtListCtrlEx">
       <UniqueIdentifier>{8e0dc452-e243-42b5-9a61-3dc09cee8176}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Common\CSCListCtrl">
+      <UniqueIdentifier>{a1c7e9d2-4f6b-4a30-9c8e-2b5f1d7e6c40}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Common\CSCMenuBar">
       <UniqueIdentifier>{e3c57cb3-b10e-47f6-a1b8-349a67ce848f}</UniqueIdentifier>
     </Filter>
@@ -74,6 +77,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Common\CListCtrl\CVtListCtrlEx\VtListCtrlEx.h">
       <Filter>Common\CVtListCtrlEx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\CListCtrl\CSCListCtrl\SCListCtrl.h">
+      <Filter>Common\CSCListCtrl</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Common\CTreeCtrl\SCTreeCtrl\SCTreeCtrl.h">
       <Filter>Common</Filter>
@@ -141,6 +147,9 @@
     <ClInclude Include="..\..\Common\CDialog\CSCColorPicker\SCDropperDlg.h">
       <Filter>Common</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Common\CDialog\SCShapeDlg\SCShapeDlg.h">
+      <Filter>Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Test_SCColorTheme.cpp">
@@ -178,6 +187,9 @@
     </ClCompile>
     <ClCompile Include="..\..\Common\CListCtrl\CVtListCtrlEx\VtListCtrlEx.cpp">
       <Filter>Common\CVtListCtrlEx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\CListCtrl\CSCListCtrl\SCListCtrl.cpp">
+      <Filter>Common\CSCListCtrl</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Common\CListCtrl\CVtListCtrlEx\HeaderCtrlEx.cpp">
       <Filter>Common\CVtListCtrlEx</Filter>
@@ -243,6 +255,9 @@
       <Filter>Common</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Common\CDialog\CSCColorPicker\SCDropperDlg.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\CDialog\SCShapeDlg\SCShapeDlg.cpp">
       <Filter>Common</Filter>
     </ClCompile>
   </ItemGroup>
