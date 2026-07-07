@@ -180,15 +180,21 @@ BOOL CTestSCColorThemeDlg::OnInitDialog()
 	m_splitter.AddToTopOrLeftCtrls(IDC_TREE);
 	m_splitter.AddToBottomOrRightCtrls(IDC_LIST);
 
-	m_tree.set_as_shell_treectrl(&m_shell_imglist);
-	m_list.set_as_shell_listctrl(&m_shell_imglist);
-	m_path.set_shell_imagelist(&m_shell_imglist, true);
+	m_tree.set_as_shell_treectrl(&theApp.m_shell_imagelist);
+	m_tree.set_use_drag_and_drop(true);
+	m_tree.add_drag_images(IDB_DRAG_SINGLE_FILE, IDB_DRAG_MULTI_FILES);
+
+	m_list.set_as_shell_listctrl(&theApp.m_shell_imagelist);
+	m_path.set_shell_imagelist(&theApp.m_shell_imagelist, true);
 	m_list.set_header_height(28);
 	m_list.set_line_height(26);
 	m_list.set_smooth_scroll(true);		//20260706 by claude. [실험] 픽셀 페인트(부분행/하단여백0) 모드 검증용.
 	m_list.SetExtendedStyle(m_list.GetExtendedStyle() | LVS_EX_CHECKBOXES);
+	m_list.set_use_drag_and_drop(true);
+	m_list.add_drag_images(IDB_DRAG_SINGLE_FILE, IDB_DRAG_MULTI_FILES);
 
-	m_tree.set_path(_T("F:\\download"));
+
+	m_tree.set_path(_T("D:\\Temp"));
 
 	m_combo_theme.set_line_height(12);
 	std::deque<CString> dq_color_theme;
@@ -228,8 +234,8 @@ BOOL CTestSCColorThemeDlg::OnInitDialog()
 
 	//모든 자식 컨트롤 + msgbox 에 테마 전파 (msgbox 는 create 이후라야 하므로 여기서 호출).
 	apply_color_theme(false);
-	m_msgbox.set_message(_T("<cr=royalblue>테스트 <b><cr=red>메시지 박스</cr></b> 길이에 따라 <b>자동 조정</b>되며\n멀티라인 가능\n<cr=blue>기본 <b><cb=lightpink>HTML 태그</b></cb> 지원"),
-		MB_ICONINFORMATION);
+	//m_msgbox.set_message(_T("<cr=royalblue>테스트 <b><cr=red>메시지 박스</cr></b> 길이에 따라 <b>자동 조정</b>되며\n멀티라인 가능\n<cr=blue>기본 <b><cb=lightpink>HTML 태그</b></cb> 지원"),
+	//	MB_ICONINFORMATION);
 
 	m_edit.set_text(_T("This is a SCEdit control 플레이그라운드."));
 
@@ -274,9 +280,9 @@ void CTestSCColorThemeDlg::init_list2()
 	//m_list2.draw_top_line(true);// , Gdiplus::Color::Red);
 	//m_list2.draw_bottom_line(true);// , Gdiplus::Color::Blue);
 
-	//
-	m_list2.set_use_own_imagelist(false);
-	//m_list2.set_shell_imagelist(&m_shell_imagelist);
+	//shell listctrl은 아니지만 파일 아이콘이 제대로 표시되는지 확인하기 위해 아래와 같이 세팅함.
+	m_list2.set_use_own_imagelist(true);
+	m_list2.set_shell_imagelist(&theApp.m_shell_imagelist);
 
 
 	//m_list2.set_column_text_align(0, HDF_CENTER);
@@ -296,6 +302,13 @@ void CTestSCColorThemeDlg::init_list2()
 	//m_list2.set_progress_color(Gdiplus::Color(255, 187, 255));
 	//m_list2.set_progress_text_color(Gdiplus::Color::Black);
 	m_list2.allow_edit();
+
+
+	m_list2.set_use_drag_and_drop(true);
+	m_list2.add_drag_images(IDB_DRAG_SINGLE_FILE, IDB_DRAG_MULTI_FILES);
+	//20260705 by claude. 소스=로컬 리스트. 드래그 중 대상 드라이브에 따라 "+ …로 복사" 문구 표시.
+	//m_list2.set_drag_hint_provider([this](CWnd* pDropWnd, CPoint pt) { return compute_drag_hint(&m_list_local, pDropWnd, pt); });
+
 
 	//RandomText를 이용한 테스트 데이터 추가
 	srand(time(NULL));
@@ -320,7 +333,7 @@ void CTestSCColorThemeDlg::init_list2()
 	}
 
 	//m_list2.SetRedraw(TRUE);
-	SetWindowText(i2S(clock() - t0));
+	//SetWindowText(i2S(clock() - t0));
 
 	//수동 테스트 데이터 추가
 	m_list2.add_item(_T("0.txt"));
@@ -341,6 +354,7 @@ void CTestSCColorThemeDlg::init_list2()
 	m_list2.set_text_color(0, col_no, Gdiplus::Color::Red);
 	m_list2.set_back_color(0, col_no, Gdiplus::Color::RoyalBlue);
 	m_list2.set_text_color(1, col_name, Gdiplus::Color::Pink);
+	m_list2.set_back_color(1, col_score, Gdiplus::Color::Red);
 
 	//m_list2.set_item_color(2, 0, Gdiplus::Color::Red, Gdiplus::Color::Blue);
 	//m_list2.set_text_color(3, 0, Gdiplus::Color::Red);
@@ -348,8 +362,6 @@ void CTestSCColorThemeDlg::init_list2()
 	//m_list2.set_item_color(4, 0, Gdiplus::Color::DeepPink, Gdiplus::Color::DodgerBlue);
 	//m_list2.set_text_color(5, 0, Gdiplus::Color::DeepPink);
 	//m_list2.set_back_color(5, 1, Gdiplus::Color::DeepPink);
-
-	m_list2.set_use_drag_and_drop();
 }
 
 void CTestSCColorThemeDlg::OnSysCommand(UINT nID, LPARAM lParam)

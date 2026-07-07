@@ -205,9 +205,8 @@
     <ClInclude Include="..\..\Common\CEdit\CSCStaticEdit\SCStaticEdit.h" />
     <ClInclude Include="..\..\Common\CEdit\SCEdit\SCEdit.h" />
     <ClInclude Include="..\..\Common\CListBox\SCListBox\SCListBox.h" />
-    <ClInclude Include="..\..\Common\CListCtrl\CVtListCtrlEx\HeaderCtrlEx.h" />
-    <ClInclude Include="..\..\Common\CListCtrl\CVtListCtrlEx\list_data.h" />
-    <ClInclude Include="..\..\Common\CListCtrl\CVtListCtrlEx\VtListCtrlEx.h" />
+    <ClInclude Include="..\..\Common\CListCtrl\CSCListCtrl\list_data.h" />
+    <ClInclude Include="..\..\Common\CListCtrl\CSCListCtrl\SCHeaderCtrl.h" />
     <ClInclude Include="..\..\Common\CListCtrl\CSCListCtrl\SCListCtrl.h" />
     <ClInclude Include="..\..\Common\CMenu\CSCMenuBar\SCMenu.h" />
     <ClInclude Include="..\..\Common\CMenu\CSCMenuBar\SCMenuBar.h" />
@@ -298,19 +297,13 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\..\Common\CListCtrl\CVtListCtrlEx\HeaderCtrlEx.cpp">
+    <ClCompile Include="..\..\Common\CListCtrl\CSCListCtrl\list_data.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\..\Common\CListCtrl\CVtListCtrlEx\list_data.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\Common\CListCtrl\CVtListCtrlEx\VtListCtrlEx.cpp">
+    <ClCompile Include="..\..\Common\CListCtrl\CSCListCtrl\SCHeaderCtrl.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
@@ -452,10 +445,11 @@
     <None Include="res\TestSCColorTheme.rc2" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="res\images\drag_multi_files.png" />
+    <Image Include="res\images\drag_single_file.png" />
     <Image Include="res\Test_SCColorTheme.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="..\..\Common\CListCtrl\CVtListCtrlEx\readme.txt" />
     <Text Include="readme.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

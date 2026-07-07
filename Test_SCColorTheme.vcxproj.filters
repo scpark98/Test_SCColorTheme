@@ -16,9 +16,6 @@
     <Filter Include="Common">
       <UniqueIdentifier>{93c5de68-1345-4e72-8e01-41c9d7819de8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Common\CVtListCtrlEx">
-      <UniqueIdentifier>{8e0dc452-e243-42b5-9a61-3dc09cee8176}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Common\CSCListCtrl">
       <UniqueIdentifier>{a1c7e9d2-4f6b-4a30-9c8e-2b5f1d7e6c40}</UniqueIdentifier>
     </Filter>
@@ -68,15 +65,6 @@
     </ClInclude>
     <ClInclude Include="..\..\Common\CButton\SCSystemButtons\SCSystemButtons.h">
       <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Common\CListCtrl\CVtListCtrlEx\HeaderCtrlEx.h">
-      <Filter>Common\CVtListCtrlEx</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Common\CListCtrl\CVtListCtrlEx\list_data.h">
-      <Filter>Common\CVtListCtrlEx</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Common\CListCtrl\CVtListCtrlEx\VtListCtrlEx.h">
-      <Filter>Common\CVtListCtrlEx</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Common\CListCtrl\CSCListCtrl\SCListCtrl.h">
       <Filter>Common\CSCListCtrl</Filter>
@@ -150,6 +138,12 @@
     <ClInclude Include="..\..\Common\CDialog\SCShapeDlg\SCShapeDlg.h">
       <Filter>Common</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Common\CListCtrl\CSCListCtrl\SCHeaderCtrl.h">
+      <Filter>Common\CSCListCtrl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\CListCtrl\CSCListCtrl\list_data.h">
+      <Filter>Common\CSCListCtrl</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Test_SCColorTheme.cpp">
@@ -182,17 +176,8 @@
     <ClCompile Include="..\..\Common\CButton\SCSystemButtons\SCSystemButtons.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Common\CListCtrl\CVtListCtrlEx\list_data.cpp">
-      <Filter>Common\CVtListCtrlEx</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Common\CListCtrl\CVtListCtrlEx\VtListCtrlEx.cpp">
-      <Filter>Common\CVtListCtrlEx</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Common\CListCtrl\CSCListCtrl\SCListCtrl.cpp">
       <Filter>Common\CSCListCtrl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Common\CListCtrl\CVtListCtrlEx\HeaderCtrlEx.cpp">
-      <Filter>Common\CVtListCtrlEx</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Common\CTreeCtrl\SCTreeCtrl\SCTreeCtrl.cpp">
       <Filter>Common</Filter>
@@ -260,6 +245,12 @@
     <ClCompile Include="..\..\Common\CDialog\SCShapeDlg\SCShapeDlg.cpp">
       <Filter>Common</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Common\CListCtrl\CSCListCtrl\SCHeaderCtrl.cpp">
+      <Filter>Common\CSCListCtrl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\CListCtrl\CSCListCtrl\list_data.cpp">
+      <Filter>Common\CSCListCtrl</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="TestSCColorTheme.rc">
@@ -275,11 +266,14 @@
     <Image Include="res\Test_SCColorTheme.ico">
       <Filter>리소스 파일</Filter>
     </Image>
+    <Image Include="res\images\drag_multi_files.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="res\images\drag_single_file.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="..\..\Common\CListCtrl\CVtListCtrlEx\readme.txt">
-      <Filter>Common\CVtListCtrlEx</Filter>
-    </Text>
     <Text Include="readme.txt" />
   </ItemGroup>
 </Project>

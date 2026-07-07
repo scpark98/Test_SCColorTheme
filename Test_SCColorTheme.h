@@ -10,6 +10,7 @@
 
 #include "resource.h"		// 주 기호입니다.
 #include "Common/log/SCLog/SCLog.h"
+#include "Common/system/ShellImageList/ShellImageList.h"
 
 // CTestSCColorThemeApp:
 // 이 클래스의 구현에 대해서는 Test_SCColorTheme.cpp을(를) 참조하세요.
@@ -19,6 +20,8 @@ class CTestSCColorThemeApp : public CWinApp
 {
 public:
 	CTestSCColorThemeApp();
+
+	CShellImageList		m_shell_imagelist;
 
 // 재정의입니다.
 public:

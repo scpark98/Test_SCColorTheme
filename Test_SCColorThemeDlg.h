@@ -29,7 +29,6 @@ public:
 	CTestSCColorThemeDlg(CWnd* pParent = nullptr);	// 표준 생성자입니다.
 
 	CResizeCtrl			m_resize;
-	CShellImageList		m_shell_imglist;
 	CSCMessageBox		m_msgbox;
 
 	//shelllist가 아닌 일반 ListCtrl

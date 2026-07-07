@@ -9,6 +9,9 @@
 #define IDR_MAINFRAME                   128
 #define IDR_MENU1                       130
 #define IDR_MENU_CONTEXT                130
+#define IDB_PNG1                        131
+#define IDB_DRAG_MULTI_FILES            131
+#define IDB_DRAG_SINGLE_FILE            132
 #define IDC_TREE                        1000
 #define IDC_LIST                        1001
 #define IDC_LIST2                       1002
@@ -50,7 +53,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        131
+#define _APS_NEXT_RESOURCE_VALUE        133
 #define _APS_NEXT_COMMAND_VALUE         32775
 #define _APS_NEXT_CONTROL_VALUE         1024
 #define _APS_NEXT_SYMED_VALUE           101
