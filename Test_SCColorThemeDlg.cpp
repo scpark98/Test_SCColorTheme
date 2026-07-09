@@ -77,7 +77,6 @@ void CTestSCColorThemeDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_LISTBOX, m_listbox);
 	DDX_Control(pDX, IDC_STATIC_SCSTATICEDIT, m_static_staticedit);
 	DDX_Control(pDX, IDC_STATIC_CSCSTATIC_EDIT, m_static_scstaticedit);
-	DDX_Control(pDX, IDC_STATIC_PATHCTRL, m_static_pathctrl);
 	DDX_Control(pDX, IDC_PATH, m_path);
 	DDX_Control(pDX, IDC_COMBO_FONT, m_combo_font);
 	DDX_Control(pDX, IDC_SLIDER_FONT_SIZE, m_slider_fontsize);
@@ -164,8 +163,7 @@ BOOL CTestSCColorThemeDlg::OnInitDialog()
 	m_resize.Create(this);
 	m_resize.Add(IDOK, 100, 100, 0, 0);
 	m_resize.Add(IDCANCEL, 100, 100, 0, 0);
-	m_resize.Add(IDC_STATIC_PATHCTRL, 0, 100, 0, 0);
-	m_resize.Add(IDC_PATH, 0, 100, 100, 0);
+	m_resize.Add(IDC_PATH, 0, 0, 100, 0);
 	m_resize.Add(IDC_TREE, 0, 0, 0, 100);
 	m_resize.Add(IDC_LIST, 0, 0, 100, 100);
 	m_resize.Add(IDC_SPLITTER, 0, 0, 0, 100);
@@ -188,6 +186,11 @@ BOOL CTestSCColorThemeDlg::OnInitDialog()
 	m_path.set_shell_imagelist(&theApp.m_shell_imagelist, true);
 	m_list.set_header_height(28);
 	m_list.set_line_height(26);
+	//20260709 by claude. 탐색기 파일목록 폰트 = 시스템 IconTitleFont(SPI_GETICONTITLELOGFONT). 한국어 Windows 에선 '맑은 고딕' 9pt 다.
+	//(앞서 Segoe UI 로 하드코딩했다가 탐색기와 달라 보였음 — Segoe UI 는 이 목록의 폰트가 아니다.) 시스템 폰트를 그대로 상속해 로케일 무관 일치.
+	LOGFONT lf_icon = { 0 };
+	if (SystemParametersInfo(SPI_GETICONTITLELOGFONT, sizeof(lf_icon), &lf_icon, 0))
+		m_list.set_log_font(lf_icon);
 	m_list.set_smooth_scroll(true);		//20260706 by claude. [실험] 픽셀 페인트(부분행/하단여백0) 모드 검증용.
 	m_list.SetExtendedStyle(m_list.GetExtendedStyle() | LVS_EX_CHECKBOXES);
 	m_list.set_use_drag_and_drop(true);
@@ -274,6 +277,7 @@ void CTestSCColorThemeDlg::init_list2()
 	m_list2.restore_column_width(&theApp, _T("list name"));
 	m_list2.set_header_height(24);
 	m_list2.set_line_height(24);
+	m_list2.set_smooth_scroll(true);		//20260708 by claude. m_list2 도 smooth(픽셀 페인트) — CSCListCtrl 전면 전환 목표에 맞춰 일반 리스트도 smooth 로 검증.
 	//m_list2.get_header_ctrl()->set_font_bold();
 	//m_list2.get_header_ctrl()->use_header_separator(false);
 
@@ -472,7 +476,6 @@ void CTestSCColorThemeDlg::apply_color_theme(bool invalidate)
 	m_btn_ok.set_color_theme(m_theme, invalidate);
 	m_btn_cancel.set_color_theme(m_theme, invalidate);
 
-	m_static_pathctrl.set_color_theme(m_theme, invalidate);
 	m_path.set_color_theme(m_theme, invalidate);
 
 	m_msgbox.set_color_theme(m_theme, invalidate);
@@ -490,6 +493,11 @@ void CTestSCColorThemeDlg::OnCbnSelchangeComboFont()
 	m_edit.set_font_name(font_name);
 	m_static_scstaticedit.set_font_name(font_name);
 	m_msgbox.set_font(font_name);
+
+	//20260709 by claude. 폰트명 변경을 tree/m_list/m_list2 에도 적용(사용자 요청). list 는 invalidate 기본값이 false 라 즉시 재그리기 위해 true 전달(트리는 항상 invalidate).
+	m_tree.set_font_name(font_name);
+	m_list.set_font_name(font_name, DEFAULT_CHARSET, true);
+	m_list2.set_font_name(font_name, DEFAULT_CHARSET, true);
 }
 
 LRESULT CTestSCColorThemeDlg::on_message_CSCSliderCtrl(WPARAM wParam, LPARAM lParam)
@@ -504,6 +512,11 @@ LRESULT CTestSCColorThemeDlg::on_message_CSCSliderCtrl(WPARAM wParam, LPARAM lPa
 	m_static_scstaticedit.set_font_size(pt);
 	m_static_fontsize.set_textf(_T("Font size %d"), pt);
 	//m_msgbox.set_font(_T(""), pt);
+
+	//20260709 by claude. 폰트 크기 변경을 tree/m_list/m_list2 에도 적용(사용자 요청). list 는 invalidate 기본값 false 라 즉시 재그리기 위해 true 전달.
+	m_tree.set_font_size(pt);
+	m_list.set_font_size(pt, true);
+	m_list2.set_font_size(pt, true);
 	return 0;
 }
 
@@ -541,13 +554,15 @@ LRESULT CTestSCColorThemeDlg::on_message_CPathCtrl(WPARAM wParam, LPARAM lParam)
 	{
 		if (msg->message == CPathCtrl::message_pathctrl_path_changed)
 		{
-			TRACE(_T("message_pathctrl_path_changed from m_path_local. path = %s\n"), msg->cur_path);
 			bool* res = (bool*)lParam;
 			CPathCtrl* pPath = (CPathCtrl*)(msg->pThis);
 			CString real_path = pPath->get_shell_imagelist()->convert_special_folder_to_real_path((pPath->get_is_local() ? 0 : 1), msg->cur_path);
+			TRACE(_T("message_pathctrl_path_changed from m_path_local. path = %s, real_path = %s\n"), msg->cur_path, real_path);
 
 			//내 PC, 바탕 화면 등과 같은 경로일 경우는 PathFileExists()로 검사가 안되므로 다른 방법으로 유효한 패스인지 검사해야 한다.
-			if (PathFileExists(real_path))
+			//20260708 by claude. 특수폴더(내 PC/바탕 화면/문서)는 실경로가 없어 PathFileExists 가 false → is_special_folder 로 먼저 유효 판정.
+			//(이 예외가 빠져 "내 PC" 클릭 시 "경로를 찾을 수 없습니다" 가 재발했다.) 그 외 실경로는 종전대로 convert→PathFileExists 로 검증.
+			if (pPath->get_shell_imagelist()->is_special_folder(pPath->get_is_local() ? 0 : 1, msg->cur_path) || PathFileExists(real_path))
 			{
 				//res에 true를 넘겨주면 경로가 유효하다는 의미가 되고 그래야만 CPathCtrl에서 경로를 변경하여 표시한다.
 				//유효한 경로인지 판별을 main에서 하는 이유는 remote일 경우도 있으므로.
@@ -653,6 +668,11 @@ LRESULT CTestSCColorThemeDlg::on_message_CSCTreeCtrl(WPARAM wParam, LPARAM /*lPa
 		m_list.set_path(msg->param0);
 		m_path.set_path(msg->param0);
 	}
+	else if (msg->message == CSCTreeCtrl::message_drive_volume_changed)
+	{
+		//트리에서 드라이브 볼륨 변경 → 리스트 동기화(+공유 캐시). 트리 자신은 edit_end 가 이미 노드 텍스트를 갱신했다.
+		sync_drive_volume(msg->param0, msg->param1);
+	}
 	return 0;
 }
 
@@ -671,7 +691,63 @@ LRESULT CTestSCColorThemeDlg::on_message_CSCListCtrl(WPARAM wParam, LPARAM lPara
 		m_tree.set_path(*p);
 		m_path.set_path(*p);
 	}
+	else if (msg->message == CSCListCtrl::message_drive_volume_changed)
+	{
+		//리스트에서 드라이브 볼륨 변경 → 트리 동기화(+공유 캐시). 리스트 자신은 edit_end 가 이미 셀을 갱신했다. param0=root, param1=새 레이블.
+		sync_drive_volume(msg->param0, msg->param1);
+	}
 	return 0;
+}
+
+//20260708 by claude. 드라이브 볼륨 레이블 변경을 형제 컨트롤(트리↔리스트)에 반영한다. pathctrl 은 내 PC 뷰에선 바꿀 게 없어 대상 아님.
+//표시 라벨은 "볼륨명 (X:)" 형식. (1) 공유 드라이브 캐시 라벨 갱신 → (2) 리스트 refresh(드라이브뷰면 재열거) → (3) 트리 드라이브 노드 텍스트 직접 갱신.
+void CTestSCColorThemeDlg::sync_drive_volume(CString drive_root, CString new_label)
+{
+	if (drive_root.IsEmpty())
+		return;
+	if (drive_root.Right(1) != _T('\\'))
+		drive_root += _T('\\');
+
+	CString disp;
+	disp.Format(_T("%s (%c:)"), (LPCTSTR)new_label, drive_root[0]);
+
+	//(1) 공유 드라이브 캐시(CShellImageList 드라이브 리스트) 라벨 갱신 — 리스트는 get_drive_list 로 드라이브뷰를 채우므로 이후 refresh 가 새 라벨을 읽는다.
+	std::deque<CDiskDriveInfo>* drives = theApp.m_shell_imagelist.get_drive_list(0);
+	if (drives != NULL)
+	{
+		for (auto& d : *drives)
+		{
+			CString dp = d.path;
+			if (dp.Right(1) != _T('\\'))
+				dp += _T('\\');
+			if (dp.CompareNoCase(drive_root) == 0)
+			{
+				_tcscpy_s(d.label, _countof(d.label), (LPCTSTR)disp);
+				break;
+			}
+		}
+	}
+
+	//(2) 리스트: 드라이브뷰면 refresh 로 새 라벨 반영(set_path 재진입, refresh=true 기본).
+	m_list.set_path(m_list.get_path());
+
+	//(3) 트리: 내 PC 하위 드라이브 노드 텍스트를 직접 갱신(트리는 노드가 영속이라 자동 재열거되지 않는다).
+	//20260708 by claude. 노드는 '드라이브 문자 (X:)' 로 찾는다. convert(get_path(노드)) 로 찾으면, 위 (1)에서 캐시 라벨을 이미 새 값으로
+	//바꿔놔서 노드의 옛 라벨을 root 로 매핑하는 게 깨져 못 찾는다(트리 미갱신 버그의 원인). 드라이브 문자는 캐시와 무관하니 안전.
+	HTREEITEM pc = m_tree.find_item(theApp.m_shell_imagelist.m_volume[0].get_label(CSIDL_DRIVES));
+	if (pc != NULL)
+	{
+		CString letter;
+		letter.Format(_T("(%c:)"), drive_root[0]);		//예: "(D:)"
+		for (HTREEITEM ch = m_tree.GetChildItem(pc); ch != NULL; ch = m_tree.GetNextSiblingItem(ch))
+		{
+			if (m_tree.GetItemText(ch).Find(letter) >= 0)
+			{
+				m_tree.SetItemText(ch, disp);
+				break;
+			}
+		}
+	}
 }
 
 void CTestSCColorThemeDlg::OnTimer(UINT_PTR nIDEvent)

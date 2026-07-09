@@ -14,3 +14,8 @@ insert_final_newline = false
 # 리소스 파일은 VS 가 UTF-16 LE 로 관리.
 [*.rc]
 end_of_line = crlf
+
+# .txt 메모는 UTF-8 BOM 으로 — BOM 없으면 VS 가 CP949 로 다뤄 저장 시 "유니코드 저장" 팝업을 매번 띄운다.
+[*.txt]
+charset = utf-8-bom
+end_of_line = crlf

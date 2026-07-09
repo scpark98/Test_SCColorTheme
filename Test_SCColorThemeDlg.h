@@ -50,6 +50,10 @@ public:
 	LRESULT				on_message_CSCListCtrl(WPARAM wParam, LPARAM lParam);
 	afx_msg void		OnTvnSelchangedTree(NMHDR* pNMHDR, LRESULT* pResult);
 
+	//20260708 by claude. 드라이브 볼륨 레이블이 리스트/트리 어느 한쪽에서 바뀌면(message_drive_volume_changed) 공유 드라이브 캐시를
+	//갱신하고 두 컨트롤의 드라이브 표시를 동기화한다. pathctrl 은 내 PC 뷰에선 바꿀 게 없어 대상 아님(사용자 명시).
+	void				sync_drive_volume(CString drive_root, CString new_label);
+
 	CSCMenu				m_menu;
 	CSCMenu				m_menu_color_theme;
 
@@ -95,7 +99,6 @@ public:
 	CSCListBox m_listbox;
 	CSCStatic m_static_staticedit;
 	CSCStaticEdit m_static_scstaticedit;
-	CSCStatic m_static_pathctrl;
 	CPathCtrl m_path;
 	afx_msg void OnBnClickedButtonListboxAdd();
 	afx_msg void OnBnClickedButtonListboxDelete();
