@@ -191,7 +191,6 @@ BOOL CTestSCColorThemeDlg::OnInitDialog()
 	LOGFONT lf_icon = { 0 };
 	if (SystemParametersInfo(SPI_GETICONTITLELOGFONT, sizeof(lf_icon), &lf_icon, 0))
 		m_list.set_log_font(lf_icon);
-	m_list.set_smooth_scroll(true);		//20260706 by claude. [실험] 픽셀 페인트(부분행/하단여백0) 모드 검증용.
 	m_list.SetExtendedStyle(m_list.GetExtendedStyle() | LVS_EX_CHECKBOXES);
 	m_list.set_use_drag_and_drop(true);
 	m_list.add_drag_images(IDB_DRAG_SINGLE_FILE, IDB_DRAG_MULTI_FILES);
@@ -277,7 +276,6 @@ void CTestSCColorThemeDlg::init_list2()
 	m_list2.restore_column_width(&theApp, _T("list name"));
 	m_list2.set_header_height(24);
 	m_list2.set_line_height(24);
-	m_list2.set_smooth_scroll(true);		//20260708 by claude. m_list2 도 smooth(픽셀 페인트) — CSCListCtrl 전면 전환 목표에 맞춰 일반 리스트도 smooth 로 검증.
 	//m_list2.get_header_ctrl()->set_font_bold();
 	//m_list2.get_header_ctrl()->use_header_separator(false);
 
