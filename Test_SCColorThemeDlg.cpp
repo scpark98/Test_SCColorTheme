@@ -470,6 +470,7 @@ void CTestSCColorThemeDlg::apply_color_theme(bool invalidate)
 
 	m_tree.set_color_theme(m_theme, invalidate);
 	m_list.set_color_theme(m_theme, invalidate);
+	m_list2.set_color_theme(m_theme, invalidate);
 
 	m_btn_ok.set_color_theme(m_theme, invalidate);
 	m_btn_cancel.set_color_theme(m_theme, invalidate);
