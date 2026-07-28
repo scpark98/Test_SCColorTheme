@@ -1,4 +1,4 @@
-@../../Common/claude.md
+﻿@../../Common/claude.md
 
 # Test_SCColorTheme
 
