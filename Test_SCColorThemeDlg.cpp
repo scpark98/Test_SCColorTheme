@@ -793,9 +793,41 @@ void CTestSCColorThemeDlg::OnBnClickedRadioAlignBottom()
 
 void CTestSCColorThemeDlg::OnBnClickedCheckDisable()
 {
-	m_edit.EnableWindow(m_check_disable.GetCheck() == BST_CHECKED ? FALSE : TRUE);
-	m_static_scstaticedit.EnableWindow(m_check_disable.GetCheck() == BST_CHECKED ? FALSE : TRUE);
-	m_radio_top.EnableWindow(m_check_disable.GetCheck() == BST_CHECKED ? FALSE : TRUE);
-	m_radio_vcenter.EnableWindow(m_check_disable.GetCheck() == BST_CHECKED ? FALSE : TRUE);
-	m_radio_bottom.EnableWindow(m_check_disable.GetCheck() == BST_CHECKED ? FALSE : TRUE);
+	//m_check_disable 자신은 제외 — disable 하면 다시 켤 수 없다.
+	BOOL enable = (m_check_disable.GetCheck() == BST_CHECKED) ? FALSE : TRUE;
+
+	//m_sys_buttons.EnableWindow(enable);
+	//m_static_color_theme.EnableWindow(enable);
+	//m_combo_theme.EnableWindow(enable);
+
+	m_static_edit.EnableWindow(enable);
+	m_edit.EnableWindow(enable);
+
+	m_static_staticedit.EnableWindow(enable);
+	m_static_scstaticedit.EnableWindow(enable);
+
+	m_static_listbox.EnableWindow(enable);
+	m_listbox.EnableWindow(enable);
+	m_button_listbox_add.EnableWindow(enable);
+	m_button_listbox_delete.EnableWindow(enable);
+
+	m_static_fontname.EnableWindow(enable);
+	m_static_fontsize.EnableWindow(enable);
+	m_combo_font.EnableWindow(enable);
+	m_slider_fontsize.EnableWindow(enable);
+
+	m_radio_top.EnableWindow(enable);
+	m_radio_vcenter.EnableWindow(enable);
+	m_radio_bottom.EnableWindow(enable);
+
+	m_tree.EnableWindow(enable);
+	m_list.EnableWindow(enable);
+	m_list2.EnableWindow(enable);
+
+	m_btn_ok.EnableWindow(enable);
+	m_btn_cancel.EnableWindow(enable);
+
+	m_path.EnableWindow(enable);
+
+	m_msgbox.EnableWindow(enable);
 }
