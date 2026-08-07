@@ -217,6 +217,7 @@
     <ClInclude Include="..\..\Common\CSliderCtrl\SCSliderCtrl\SCSliderCtrl.h" />
     <ClInclude Include="..\..\Common\CStatic\PathCtrl\PathCtrl.h" />
     <ClInclude Include="..\..\Common\CStatic\SCStatic\SCStatic.h" />
+    <ClInclude Include="..\..\Common\CToolTipCtrl\CSCToolTipCtrl\SCToolTipCtrl.h" />
     <ClInclude Include="..\..\Common\CTreeCtrl\SCTreeCtrl\SCTreeCtrl.h" />
     <ClInclude Include="..\..\Common\data_structure\SCParagraph\SCParagraph.h" />
     <ClInclude Include="..\..\Common\Functions.h" />
@@ -364,6 +365,12 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\..\Common\CStatic\SCStatic\SCStatic.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\CToolTipCtrl\CSCToolTipCtrl\SCToolTipCtrl.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>

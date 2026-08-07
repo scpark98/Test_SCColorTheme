@@ -250,6 +250,16 @@ BOOL CTestSCColorThemeDlg::OnInitDialog()
 
 	init_list2();
 
+	//20260807 by claude. 툴팁 인스턴스·Create·relay 는 CSCThemeDlg 가 소유하므로 여기서는 내용만 등록한다.
+	//Disable 체크로 이 컨트롤들을 disable 시켜도 툴팁이 그대로 뜨는지가 확인 포인트.
+	m_tooltip.AddTool(&m_edit, _T("<b>CSCEdit</b><br>native CEdit 파생. disable 시 테두리가 사라진다."));
+	m_tooltip.AddTool(&m_static_scstaticedit, _T("<b>CSCStaticEdit</b><br><cr=royalblue>CStatic</cr> 기반 자체 그리기 edit."));
+	m_tooltip.AddTool(&m_combo_theme, _T("<b>CSCComboBox</b><br>color theme 을 바꾼다.<br><cr=gray>툴팁 색도 함께 바뀐다.</cr>"));
+	m_tooltip.AddTool(&m_tree, _T("<b>CSCTreeCtrl</b><br>커스텀 스크롤바 · disable 시 입력 무시."));
+	m_tooltip.AddTool(&m_list, _T("<b>CSCListCtrl</b><br>shell list 모드."));
+	m_tooltip.AddTool(&m_btn_ok, _T("<b>CGdiButton</b> <sz=8><cr=gray>(확인)</cr></sz>"));
+	m_tooltip.AddTool(&m_check_disable, _T("모든 컨트롤들을 <cr=crimson><b>disable</cr></b> 시킨다.<br>disable 상태에서도 이 툴팁들이 표시된다."));
+
 	RestoreWindowPosition(&theApp, this);
 
 	SetTimer(timer_test, 100, NULL);

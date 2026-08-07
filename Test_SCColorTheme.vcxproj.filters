@@ -144,6 +144,9 @@
     <ClInclude Include="..\..\Common\CListCtrl\CSCListCtrl\list_data.h">
       <Filter>Common\CSCListCtrl</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Common\CToolTipCtrl\CSCToolTipCtrl\SCToolTipCtrl.h">
+      <Filter>Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Test_SCColorTheme.cpp">
@@ -250,6 +253,9 @@
     </ClCompile>
     <ClCompile Include="..\..\Common\CListCtrl\CSCListCtrl\list_data.cpp">
       <Filter>Common\CSCListCtrl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\CToolTipCtrl\CSCToolTipCtrl\SCToolTipCtrl.cpp">
+      <Filter>Common</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
