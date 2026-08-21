@@ -236,8 +236,8 @@ BOOL CTestSCColorThemeDlg::OnInitDialog()
 
 	//모든 자식 컨트롤 + msgbox 에 테마 전파 (msgbox 는 create 이후라야 하므로 여기서 호출).
 	apply_color_theme(false);
-	//m_msgbox.set_message(_T("<cr=royalblue>테스트 <b><cr=red>메시지 박스</cr></b> 길이에 따라 <b>자동 조정</b>되며\n멀티라인 가능\n<cr=blue>기본 <b><cb=lightpink>HTML 태그</b></cb> 지원"),
-	//	MB_ICONINFORMATION);
+	m_msgbox.set_message(_T("<cr=royalblue>테스트 <b><cr=red>메시지 박스</cr></b> 길이에 따라 <b>자동 조정</b>되며\n멀티라인 가능\n<cr=blue>기본 <b><cb=lightpink>HTML 태그</b></cb> 지원"),
+		MB_ABORTRETRYIGNORE | MB_ICONINFORMATION);
 
 	m_edit.set_text(_T("This is a SCEdit control 플레이그라운드."));
 
