@@ -60,6 +60,9 @@ public:
 	//모든 자식 컨트롤 + msgbox 에 현재 m_theme 을 전파. invalidate=true 면 즉시 redraw (런타임 테마 변경 시).
 	void				apply_color_theme(bool invalidate);
 
+	//20260826 by claude. 폰트 크기(pt)를 모든 컨트롤에 적용. 슬라이더 조작과 시작 시 복원이 같은 경로를 쓴다.
+	void				apply_font_size(int pt);
+
 	enum TIMER_ID
 	{
 		timer_test = 1,

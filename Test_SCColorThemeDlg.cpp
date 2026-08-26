@@ -229,8 +229,16 @@ BOOL CTestSCColorThemeDlg::OnInitDialog()
 	//CSCListBox 폰트 quality 자동판정 시연 — IDC_COMBO_FONT(폰트) + IDC_SLIDER_FONT_SIZE(크기).
 	//폰트가 그 크기에 비트맵을 가지면 DEFAULT_QUALITY(또렷), 없으면 ANTIALIASED_QUALITY(부드럽게)가 자동 적용.
 	//폰트(굴림=비트맵 / Segoe UI=벡터)와 크기를 바꿔가며 전환 경계를 직접 확인.
-	m_combo_font.SelectString(-1, _T("Segoe UI"));	//다이얼로그 상속 폰트와 동일
-	m_slider_fontsize.set_pos(10);					//listbox 초기 크기와 동일
+	//20260826 by claude. 마지막으로 고른 폰트·크기를 복원한다. 기본값은 다이얼로그 상속 폰트(Segoe UI) + listbox 초기 크기(10).
+	CString font_name = theApp.GetProfileString(_T("setting"), _T("font name"), _T("Segoe UI"));
+	int font_size = theApp.GetProfileInt(_T("setting"), _T("font size"), 10);
+
+	//SelectString 과 달리 set_cur_sel 은 font combo 의 m_lf 까지 동기화한다 (CBN_SELCHANGE 가 안 오므로).
+	int font_index = m_combo_font.FindStringExact(-1, font_name);
+	if (font_index >= 0)
+		m_combo_font.set_cur_sel(font_index);
+
+	m_slider_fontsize.set_pos(font_size);
 
 	m_msgbox.create(this, _T("Test_SCColorTheme"), 0, false);
 
@@ -259,6 +267,11 @@ BOOL CTestSCColorThemeDlg::OnInitDialog()
 	m_tooltip.AddTool(&m_list, _T("<b>CSCListCtrl</b><br>shell list 모드."));
 	m_tooltip.AddTool(&m_btn_ok, _T("<b>CGdiButton</b> <sz=8><cr=gray>(확인)</cr></sz>"));
 	m_tooltip.AddTool(&m_check_disable, _T("모든 컨트롤들을 <cr=crimson><b>disable</cr></b> 시킨다.<br>disable 상태에서도 이 툴팁들이 표시된다."));
+
+	//20260826 by claude. 콤보·슬라이더에 값만 넣어서는 컨트롤들에 반영되지 않는다 — 프로그램적 변경은 알림이 오지 않는다.
+	//msgbox 까지 만들어진 이 시점에서 사용자가 직접 고른 것과 같은 경로로 한 번 적용한다.
+	OnCbnSelchangeComboFont();
+	apply_font_size(font_size);
 
 	RestoreWindowPosition(&theApp, this);
 
@@ -498,6 +511,8 @@ void CTestSCColorThemeDlg::OnCbnSelchangeComboFont()
 	if (font_name.IsEmpty())
 		return;
 
+	theApp.WriteProfileString(_T("setting"), _T("font name"), font_name);
+
 	m_listbox.set_font_name(font_name);
 	m_edit.set_font_name(font_name);
 	m_static_scstaticedit.set_font_name(font_name);
@@ -514,8 +529,19 @@ LRESULT CTestSCColorThemeDlg::on_message_CSCSliderCtrl(WPARAM wParam, LPARAM lPa
 	CSCSliderCtrlMsg* msg = (CSCSliderCtrlMsg*)wParam;
 
 	//grab / move / release 모두에서 현재 pos(=pt) 를 즉시 반영해 드래그 중에도 폰트 크기가 따라오게 한다.
-	//set_font_size 가 ReconstructFont 를 호출 → 새 크기에서 비트맵 보유 여부로 AA 모드를 자동 재판정.
 	int pt = msg->pos;
+	apply_font_size(pt);
+
+	//20260826 by claude. 드래그 중(move)에는 저장하지 않는다 — 한 번 드래그에 레지스트리 쓰기가 수십 번 발생한다.
+	if (msg->msg == CSCSliderCtrlMsg::msg_thumb_release || msg->msg == CSCSliderCtrlMsg::msg_thumb_track_bottom_slide)
+		theApp.WriteProfileInt(_T("setting"), _T("font size"), pt);
+
+	return 0;
+}
+
+void CTestSCColorThemeDlg::apply_font_size(int pt)
+{
+	//set_font_size 가 ReconstructFont 를 호출 → 새 크기에서 비트맵 보유 여부로 AA 모드를 자동 재판정.
 	m_listbox.set_font_size(pt);
 	m_edit.set_font_size(pt);
 	m_static_scstaticedit.set_font_size(pt);
@@ -526,7 +552,6 @@ LRESULT CTestSCColorThemeDlg::on_message_CSCSliderCtrl(WPARAM wParam, LPARAM lPa
 	m_tree.set_font_size(pt);
 	m_list.set_font_size(pt, true);
 	m_list2.set_font_size(pt, true);
-	return 0;
 }
 
 LRESULT CTestSCColorThemeDlg::on_message_CSCSystemButtons(WPARAM wParam, LPARAM lParam)
