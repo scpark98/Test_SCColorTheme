@@ -244,7 +244,7 @@ BOOL CTestSCColorThemeDlg::OnInitDialog()
 
 	//모든 자식 컨트롤 + msgbox 에 테마 전파 (msgbox 는 create 이후라야 하므로 여기서 호출).
 	apply_color_theme(false);
-	m_msgbox.set_message(_T("<cr=royalblue>테스트 <b><cr=red>메시지 박스</cr></b> 길이에 따라 <b>자동 조정</b>되며\n멀티라인 가능\n<cr=blue>기본 <b><cb=lightpink>HTML 태그</b></cb> 지원"),
+	m_msgbox.set_message(_T("<cr=royalblue>테스트 <b><cr=red>메시지 박스.</cr></b> 텍스트 길이에 따라 <b>자동 조정</b>되며\n멀티라인 가능\n<cr=blue>기본 <b><cb=lightpink>HTML 태그</b></cb> 지원"),
 		MB_ABORTRETRYIGNORE | MB_ICONINFORMATION);
 
 	m_edit.set_text(_T("This is a SCEdit control 플레이그라운드."));
@@ -263,10 +263,123 @@ BOOL CTestSCColorThemeDlg::OnInitDialog()
 	m_tooltip.AddTool(&m_edit, _T("<b>CSCEdit</b><br>native CEdit 파생. disable 시 테두리가 사라진다."));
 	m_tooltip.AddTool(&m_static_scstaticedit, _T("<b>CSCStaticEdit</b><br><cr=royalblue>CStatic</cr> 기반 자체 그리기 edit."));
 	m_tooltip.AddTool(&m_combo_theme, _T("<b>CSCComboBox</b><br>color theme 을 바꾼다.<br><cr=gray>툴팁 색도 함께 바뀐다.</cr>"));
+
+	//<indent> 는 문단 전체를, <hang> 은 wrap 으로 이어진 줄만 민다. 일부러 max_width 를 넘겨 wrap 을 만든다.
+	m_tooltip.AddTool(&m_path,
+		_T("<la=bottom><b>CPathCtrl</b> <sz=8><cr=gray>(탐색기 주소표시줄)</cr></sz>")
+		_T("<br><indent=10><hang=14>경로가 길어 한 줄에 들어가지 않으면 자동으로 줄이 바뀌고, ")
+		_T("이어지는 줄만 hang 만큼 더 들여쓴다. indent 는 문단 전체를 미는 값이다.<br>&lt;br&gt;에 의해 다음 라인들은 왼쪽에 들여쓰기가 없다."));
 	m_tooltip.AddTool(&m_tree, _T("<b>CSCTreeCtrl</b><br>커스텀 스크롤바 · disable 시 입력 무시."));
 	m_tooltip.AddTool(&m_list, _T("<b>CSCListCtrl</b><br>shell list 모드."));
-	m_tooltip.AddTool(&m_btn_ok, _T("<b>CGdiButton</b> <sz=8><cr=gray>(확인)</cr></sz>"));
 	m_tooltip.AddTool(&m_check_disable, _T("모든 컨트롤들을 <cr=crimson><b>disable</cr></b> 시킨다.<br>disable 상태에서도 이 툴팁들이 표시된다."));
+
+	//20260828 by claude. 아래 툴팁들은 컨트롤 설명이면서 동시에 CSCParagraph 태그의 표본이다.
+	//어떤 태그가 툴팁에서 실제로 어떻게 그려지는지 한 화면에서 비교할 수 있도록 컨트롤마다 서로 다른 태그를 배분했다.
+	//색은 태그 안에서만 지정한다 — 컨트롤 자체에는 여전히 set_color_theme(m_theme) 한 줄뿐이다.
+	//제목 줄에 <la=bottom> 을 붙이는 이유 : 라인의 기본 세로 정렬은 DT_TOP 이라 크기가 다른 run 을 한 줄에
+	//섞으면 작은 글자가 윗변에 붙어 떠 보인다. 아랫변을 맞춰야 글자들이 같은 기준선에 놓인 것처럼 읽힌다.
+
+	//<al> 가운데 정렬 + <grad> 글자 그라디언트. 그라디언트 시작색은 테마의 cr_text 라 테마를 따라간다.
+	m_tooltip.AddTool(&m_static_color_theme,
+		_T("<al=center><sz=12><b><grad=violet>CSCStatic</grad></b></sz>")
+		_T("<br><al=center>태그 텍스트를 그리는 라벨")
+		_T("<br><ls=0.5><al=center><sz=8><cr=gray>al=center · grad=색</cr></sz>"));
+
+	//<st>/<cs> 외곽선, <ts> 그림자 목록 (앞 항목이 글자에 더 가깝게 그려진다).
+	m_tooltip.AddTool(&m_static_edit,
+		_T("<la=bottom><b>CSCStatic</b> <sz=8><cr=gray>(CSCEdit 라벨)</cr></sz>")
+		_T("<br><ls=0.8><st=3><cs=black><cr=gold>외곽선 st=3 · cs=black</cr></cs></st>")
+		_T("<br><ts=0,2,4,black;0,0,10,deepskyblue>그림자 두 겹 ts=x,y,blur,색</ts>"));
+
+	//<sup>/<sub> 위·아래 첨자.
+	m_tooltip.AddTool(&m_static_staticedit,
+		_T("<b>CSCStatic</b><br>위 첨자 x<sup>2</sup> · 아래 첨자 H<sub>2</sub>O")
+		_T("<br><ls=1.4><sz=8><cr=gray>sup · sub</cr></sz>"));
+
+	//<box> run 을 여백만큼 부풀린 라운드 배경.
+	m_tooltip.AddTool(&m_static_listbox,
+		_T("<la=bottom><b>CSCStatic</b> <box=royalblue,10,6><cr=white>label</cr></box>")
+		_T("<br><ls=0.8>오른쪽 리스트박스를 가리키는 라벨"));
+
+	m_tooltip.AddTool(&m_listbox,
+		_T("<b>CSCListBox</b>")
+		_T("<br><ls=0.8><b>F2</b> 로 <box=seagreen,10,5><cr=white>편집</cr></box>, <b>Delete</b> 로 삭제.")
+		_T("<br><ls=1.4><sz=8><cr=gray>box=색,반지름,여백</cr></sz>"));
+
+	m_tooltip.AddTool(&m_btn_ok, _T("<la=bottom><b>CGdiButton</b> <sz=8><cr=gray>(확인)</cr></sz>"));
+
+	//<glow> 는 <ts=0,0,sigma,색,sigma> 의 축약이라 offset 이 0 이고 사방으로 퍼진다.
+	//sigma 는 글자 크기에 맞춰야 한다 — spread 가 sigma 와 같아서, 9pt 글자에 12 를 주면
+	//글리프가 서로 붙어 덩어리가 되고 발광이 아니라 얼룩으로 보인다.
+	m_tooltip.AddTool(&m_btn_cancel,
+		_T("<la=bottom><b>CGdiButton</b> <sz=8><cr=gray>(취소)</cr></sz>")
+		_T("<br><ls=0.8><glow=orangered,4><b>glow</b></glow> 로 글자 주위를 <glow=gold>발광</glow>시킨다."));
+
+	//<box> 는 단어를 감싼다 — 여백이 글자 박스(라인 높이) 기준이라 한 글자 run 은 세로로 길쭉해진다.
+	m_tooltip.AddTool(&m_button_listbox_add,
+		_T("<box=seagreen,9,5><cr=white><b>추가</b></cr></box> 항목을 넣고 바로 편집 상태가 된다."));
+
+	//<cr=#AARRGGBB> — 8자리는 alpha 가 앞에 온다(RRGGBBAA 아님).
+	m_tooltip.AddTool(&m_button_listbox_delete,
+		_T("<box=crimson,9,5><cr=white><b>삭제</b></cr></box> 선택한 항목을 지운다.")
+		_T("<br><ls=1.4><sz=8><cr=gray>#AARRGGBB 도 쓴다 → <cr=#80CC3333>반투명 글자</cr></cr></sz>"));
+
+	//<tab> 은 다음 run 의 라인 내 시작 x 를 고정한다 — 툴팁 안에 표를 만들 수 있다.
+	m_tooltip.AddTool(&m_combo_font,
+		_T("<la=bottom><b>CSCComboBox</b> <sz=8><cr=gray>(font)</cr></sz>")
+		_T("<br><ls=0.8><u>태그<tab=96>기능</u>")
+		_T("<br>tab<tab=96>다음 run 의 시작 x 고정")
+		_T("<br>f<tab=96>구간 글꼴")
+		_T("<br>sz<tab=96>구간 글자 크기"));
+
+	//<sp> 자간(음수 = 좁힘).
+	m_tooltip.AddTool(&m_slider_fontsize,
+		_T("<b>CSCSliderCtrl</b>")
+		_T("<br><ls=0.8>글자 크기를 8<sub>pt</sub> 부터 108<sup>pt</sup> 까지 바꾼다.")
+		_T("<br><sp=4>넓은 자간 sp=4</sp> · <sp=-1>좁은 sp=-1</sp>"));
+
+	//<f> run 마다 다른 글꼴.
+	m_tooltip.AddTool(&m_static_fontname,
+		_T("<b>CSCStatic</b>")
+		_T("<br><ls=0.8><f=Consolas>Consolas</f> · <f=Georgia><i>Georgia</i></f> · <f=Impact>Impact</f>")
+		_T("<br><ls=1.4><sz=8><cr=gray>f=글꼴 — run 단위로 글꼴이 바뀐다</cr></sz>"));
+
+	//<la> 는 크기가 다른 run 이 섞인 라인의 세로 기준선을 고른다.
+	m_tooltip.AddTool(&m_static_fontsize,
+		_T("<b>CSCStatic</b>")
+		_T("<br><ls=0.8><la=bottom><sz=8>8</sz> <sz=12>12</sz> <sz=16>16</sz> <sz=20>20</sz>")
+		_T("<br><ls=1.4><sz=8><cr=gray>la=bottom — 아랫변을 맞춘다</cr></sz>"));
+
+	//<ruby> 는 바로 다음 run 하나 위에 0.5 배 주석을 얹는다. <cru> 로 루비 색만 따로 준다.
+	//세 라디오는 CSCEdit 과 CSCStaticEdit 두 컨트롤의 set_line_align 을 함께 바꾼다.
+	m_tooltip.AddTool(&m_radio_top,
+		_T("<la=bottom><b>CGdiButton</b> <sz=8><cr=gray>(radio)</cr></sz>")
+		_T("<br><ls=0.8><ruby=うえ>上</ruby> CSCEdit·CSCStaticEdit 글자를 <b>위</b>로."));
+
+	m_tooltip.AddTool(&m_radio_vcenter,
+		_T("<la=bottom><b>CGdiButton</b> <sz=8><cr=gray>(radio)</cr></sz>")
+		_T("<br><ls=0.8><cru=orange><ruby=なか>中</ruby></cru> CSCEdit·CSCStaticEdit 글자를 <b>가운데</b>로.")
+		_T("<br><ls=1.4><sz=8><cr=gray>cru=루비 색</cr></sz>"));
+
+	m_tooltip.AddTool(&m_radio_bottom,
+		_T("<la=bottom><b>CGdiButton</b> <sz=8><cr=gray>(radio)</cr></sz>")
+		_T("<br><ls=0.8><ruby=した>下</ruby> CSCEdit·CSCStaticEdit 글자를 <b>아래</b>로."));
+
+	//<nowrap> 구간은 word-wrap 이 쪼개지 않는다.
+	m_tooltip.AddTool(&m_splitter,
+		_T("<b>CControlSplitter</b>")
+		_T("<br><ls=0.8>드래그하면 트리와 리스트의 폭이 나뉜다.")
+		_T("<br><nowrap>이 문장은 nowrap 이라 쪼개지지 않는다</nowrap>"));
+
+	m_tooltip.AddTool(&m_list2,
+		_T("<la=bottom><b>CSCListCtrl</b> <sz=8><cr=gray>(report)</cr></sz>")
+		_T("<br><ls=0.8><u>컬럼<tab=64>폭<tab=104>내용</u>")
+		_T("<br>No<tab=64>50<tab=104>순번")
+		_T("<br>Name<tab=64>150<tab=104>이름")
+		_T("<br>Slogan<tab=64>200<tab=104>표어")
+		_T("<br>Score<tab=64>100<tab=104><cr=seagreen>점수</cr>")
+		_T("<br>Memo<tab=64>200<tab=104>비고")
+		_T("<br><ls=1.4><sz=8><cr=gray>체크박스 · 전체 행 선택</cr></sz>"));
 
 	//20260826 by claude. 콤보·슬라이더에 값만 넣어서는 컨트롤들에 반영되지 않는다 — 프로그램적 변경은 알림이 오지 않는다.
 	//msgbox 까지 만들어진 이 시점에서 사용자가 직접 고른 것과 같은 경로로 한 번 적용한다.
