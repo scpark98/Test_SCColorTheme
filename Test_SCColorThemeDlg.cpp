@@ -268,7 +268,7 @@ BOOL CTestSCColorThemeDlg::OnInitDialog()
 	m_tooltip.AddTool(&m_path,
 		_T("<la=bottom><b>CPathCtrl</b> <sz=8><cr=gray>(탐색기 주소표시줄)</cr></sz>")
 		_T("<br><indent=10><hang=14>경로가 길어 한 줄에 들어가지 않으면 자동으로 줄이 바뀌고, ")
-		_T("이어지는 줄만 hang 만큼 더 들여쓴다. indent 는 문단 전체를 미는 값이다.<br>&lt;br&gt;에 의해 다음 라인들은 왼쪽에 들여쓰기가 없다."));
+		_T("이어지는 줄만 hang 만큼 더 들여쓴다. indent 는 문단 전체를 미는 값이다.<br>&lt;br&gt;에 의해 다음 라인으로 줄바꿈되면 왼쪽에 들여쓰기가 없다."));
 	m_tooltip.AddTool(&m_tree, _T("<b>CSCTreeCtrl</b><br>커스텀 스크롤바 · disable 시 입력 무시."));
 	m_tooltip.AddTool(&m_list, _T("<b>CSCListCtrl</b><br>shell list 모드."));
 	m_tooltip.AddTool(&m_check_disable, _T("모든 컨트롤들을 <cr=crimson><b>disable</cr></b> 시킨다.<br>disable 상태에서도 이 툴팁들이 표시된다."));
