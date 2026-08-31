@@ -25,10 +25,15 @@ dlg 안에서 한눈에 비교되도록 다음 컨트롤이 모두 배치되어 
 - `CSCSystemButtons` (min/max/close)
 - `CSCComboBox` (theme 선택 + 동작 확인)
 - `CSCEdit`, `CSCStaticEdit` (편집 컨트롤)
-- `CSCListBox`, `CSCTreeCtrl`, `CVtListCtrlEx` (목록/트리/리포트)
+- `CSCListBox`, `CSCTreeCtrl`, `CSCListCtrl` (목록/트리/리포트) — 리스트는 두 개(`m_list`, `m_list2`)
 - `CGdiButton` (확인/취소 — Win11 face 산출)
 - `CPathCtrl` (탐색기 주소표시줄 스타일)
 - `CSCMessageBox` (modeless — 태그 텍스트 포함)
+
+## 이 프로젝트가 보는 것 / 보지 않는 것
+
+여기서 검증하는 것은 **테마 렌더링**뿐이다. 컬럼·정렬·편집·선택·가상 리스트·오버레이 스크롤바·드래그
+같은 *리스트 자체의 동작* 은 `D:\1.Projects_C++\1.test\Test_CSCListCtrl` 이 맡는다 (2026-08-31 신설).
 
 ## 작업 흐름
 
