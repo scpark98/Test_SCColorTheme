@@ -629,7 +629,7 @@ void CTestSCColorThemeDlg::OnCbnSelchangeComboFont()
 	m_listbox.set_font_name(font_name);
 	m_edit.set_font_name(font_name);
 	m_static_scstaticedit.set_font_name(font_name);
-	m_msgbox.set_font(font_name);
+	//m_msgbox.set_font(font_name);
 
 	//20260709 by claude. 폰트명 변경을 tree/m_list/m_list2 에도 적용(사용자 요청). list 는 invalidate 기본값이 false 라 즉시 재그리기 위해 true 전달(트리는 항상 invalidate).
 	m_tree.set_font_name(font_name);
