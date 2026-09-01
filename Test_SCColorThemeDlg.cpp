@@ -297,15 +297,17 @@ BOOL CTestSCColorThemeDlg::OnInitDialog()
 		_T("<br><ls=1.4><sz=8><cr=gray>sup · sub</cr></sz>"));
 
 	//20260901 by claude. <box> 는 여백을 가로/세로로 따로 준다 — 세로 여백은 line box(ascent+descent 포함)에
-	//더해지므로 조금만 줘도 두꺼워진다. 칩처럼 보이려면 가로는 넉넉히(8), 세로는 얇게(2).
+	//더해지므로 조금만 줘도 두꺼워진다. 칩처럼 보이려면 가로는 넉넉히(8), 세로는 얇게(3).
 	//반지름은 높이의 절반으로 클램프되므로 99 를 주면 항상 깔끔한 알약이 된다.
+	//뱃지 글자는 본문보다 한 단계 작게(<sz=8>) 준다 — 본문과 같은 크기면 알약이 줄 높이를 넘어 커 보이고
+	//뒤따르는 문장부호와 붙는다.
 	m_tooltip.AddTool(&m_static_listbox,
-		_T("<la=bottom><b>CSCStatic</b> <box=royalblue,99,8,2><cr=white>label</cr></box>")
+		_T("<la=bottom><b>CSCStatic</b> <box=royalblue,99,8,3><sz=8><cr=white>label</cr></sz></box>")
 		_T("<br><ls=0.8>오른쪽 리스트박스를 가리키는 라벨"));
 
 	m_tooltip.AddTool(&m_listbox,
 		_T("<b>CSCListBox</b>")
-		_T("<br><ls=0.8><b>F2</b> 로 <box=seagreen,99,8,2><cr=white>편집</cr></box>, <b>Delete</b> 로 삭제.")
+		_T("<br><ls=0.8><b>F2</b> 로 <box=seagreen,99,8,3><sz=8><cr=white>편집</cr></sz></box>, <b>Delete</b> 로 삭제.")
 		_T("<br><ls=1.4><sz=8><cr=gray>box=색,반지름,가로여백,세로여백</cr></sz>"));
 
 	m_tooltip.AddTool(&m_btn_ok, _T("<la=bottom><b>CGdiButton</b> <sz=8><cr=gray>(확인)</cr></sz>"));
@@ -319,11 +321,11 @@ BOOL CTestSCColorThemeDlg::OnInitDialog()
 
 	//<box> 는 단어를 감싼다 — 여백이 글자 박스(라인 높이) 기준이라 한 글자 run 은 세로로 길쭉해진다.
 	m_tooltip.AddTool(&m_button_listbox_add,
-		_T("<box=seagreen,99,8,2><cr=white><b>추가</b></cr></box> 항목을 넣고 바로 편집 상태가 된다."));
+		_T("<box=seagreen,99,8,3><sz=8><cr=white><b>추가</b></cr></sz></box> 항목을 넣고 바로 편집 상태가 된다."));
 
 	//<cr=#AARRGGBB> — 8자리는 alpha 가 앞에 온다(RRGGBBAA 아님).
 	m_tooltip.AddTool(&m_button_listbox_delete,
-		_T("<box=crimson,99,8,2><cr=white><b>삭제</b></cr></box> 선택한 항목을 지운다.")
+		_T("<box=crimson,99,8,3><sz=8><cr=white><b>삭제</b></cr></sz></box> 선택한 항목을 지운다.")
 		_T("<br><ls=1.4><sz=8><cr=gray>#AARRGGBB 도 쓴다 → <cr=#80CC3333>반투명 글자</cr></cr></sz>"));
 
 	//<tab> 은 다음 run 의 라인 내 시작 x 를 고정한다 — 툴팁 안에 표를 만들 수 있다.
