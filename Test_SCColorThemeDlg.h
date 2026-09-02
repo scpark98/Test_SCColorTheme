@@ -126,4 +126,7 @@ public:
 	CGdiButton m_check_disable;
 	afx_msg void OnBnClickedCheckDisable();
 	CSCListCtrl m_list2;
+
+	//마지막으로 레지스트리에 쓴 폰트 크기. 드래그 중 같은 값이 반복 통지될 때 쓰기를 건너뛰는 용도.
+	int m_saved_font_size = 0;
 };

@@ -175,8 +175,9 @@ BOOL CTestSCColorThemeDlg::OnInitDialog()
 	m_radio_bottom.set_auto_color(false);
 
 	m_splitter.set_type(CControlSplitter::CS_VERT);
-	m_splitter.AddToTopOrLeftCtrls(IDC_TREE);
-	m_splitter.AddToBottomOrRightCtrls(IDC_LIST);
+	//20260902 by claude. 최소 너비(min_cx)를 주지 않으면 양쪽 컨트롤이 0 까지 줄어 스플리터가 트리 왼쪽 밖까지 넘어간다.
+	m_splitter.AddToTopOrLeftCtrls(IDC_TREE, 120);
+	m_splitter.AddToBottomOrRightCtrls(IDC_LIST, 120);
 
 	m_tree.set_as_shell_treectrl(&theApp.m_shell_imagelist);
 	m_tree.set_use_drag_and_drop(true);
@@ -232,6 +233,7 @@ BOOL CTestSCColorThemeDlg::OnInitDialog()
 	//20260826 by claude. 마지막으로 고른 폰트·크기를 복원한다. 기본값은 다이얼로그 상속 폰트(Segoe UI) + listbox 초기 크기(10).
 	CString font_name = theApp.GetProfileString(_T("setting"), _T("font name"), _T("Segoe UI"));
 	int font_size = theApp.GetProfileInt(_T("setting"), _T("font size"), 10);
+	m_saved_font_size = font_size;
 
 	//SelectString 과 달리 set_cur_sel 은 font combo 의 m_lf 까지 동기화한다 (CBN_SELCHANGE 가 안 오므로).
 	int font_index = m_combo_font.FindStringExact(-1, font_name);
@@ -649,9 +651,14 @@ LRESULT CTestSCColorThemeDlg::on_message_CSCSliderCtrl(WPARAM wParam, LPARAM lPa
 	int pt = msg->pos;
 	apply_font_size(pt);
 
-	//20260826 by claude. 드래그 중(move)에는 저장하지 않는다 — 한 번 드래그에 레지스트리 쓰기가 수십 번 발생한다.
-	if (msg->msg == CSCSliderCtrlMsg::msg_thumb_release || msg->msg == CSCSliderCtrlMsg::msg_thumb_track_bottom_slide)
+	//20260902 by claude. 메시지 종류를 가리지 않고 바뀌는 즉시 저장한다. 휠·방향키(OnMouseWheel/OnKeyDown)는
+	//msg_thumb_move 만 보내므로 release 로 한정하면 그 경로가 통째로 누락된다. 레지스트리 쓰기는 값이 실제로
+	//달라졌을 때만 하므로 드래그 한 번에 나는 쓰기는 지나간 눈금 수만큼이다.
+	if (pt != m_saved_font_size)
+	{
+		m_saved_font_size = pt;
 		theApp.WriteProfileInt(_T("setting"), _T("font size"), pt);
+	}
 
 	return 0;
 }
